@@ -1,18 +1,75 @@
-<template>
-  <div class="home">
-    <img src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="pug">
+md-app
+  md-app-drawer(md-permanent="full")
+    md-list.md-double-line
+      div(v-for="memo in memos")
+        md-list-item(:to="{ name: 'edit', params: { memoUid: memo['.key']} }")
+          md-icon description
+          .md-list-item-text
+            span {{ memo.title }}
+            span {{ memo.updatedAt }}
+        md-divider
+    .user.md-elevation-1
+      span(style="flex:1")
+        md-icon person
+        span(style="margin-left:8px") {{ user.email }}
+      md-button(:md-ripple="false", @click="logout").md-dense.md-icon-button
+        md-icon exit_to_app
+  md-app-content
+    router-view
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import { mapState } from 'vuex'
 
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
+  name: 'Home',
+  computed: {
+    ...mapState({
+      user: state => state.auth.user,
+      memos: state => state.memos.all
+    })
+  },
+  created () {
+    this.$store.dispatch('memos/init')
+  },
+  methods: {
+    logout () {
+      this.$store.dispatch('auth/logout').then(() => {
+        this.$router.push({ name: 'login' })
+      })
+    }
   }
 }
 </script>
+
+<style lang="stylus">
+body
+  height: 100%
+</style>
+
+<style lang="stylus" scoped>
+.md-app
+  height: 100%
+.md-app-container
+  height: 100%
+.md-drawer
+  width: 270px
+  max-width: 100%
+  background-color: #fafafa
+.md-list
+  background-color: #fafafa
+.user
+  position: absolute
+  bottom: 0
+  box-sizing: border-box
+  width: 100%
+  background-color: #fafafa
+  padding: 16px
+  display: flex
+  align-items: center
+.user *
+  vertical-align: middle
+.md-empty-state
+  height: 100%
+</style>
