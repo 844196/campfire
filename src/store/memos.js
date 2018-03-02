@@ -10,7 +10,7 @@ export default {
   },
   getters: {
     findOrEmpty (state) {
-      return (uid) => state.all.find(m => m['.key'] === uid) || { title: '', content: '' }
+      return (memoUid) => state.all.find(m => m['.key'] === memoUid) || { title: '', content: '' }
     }
   },
   mutations: {
