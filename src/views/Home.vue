@@ -1,7 +1,7 @@
 <template lang="pug">
 md-app
   md-app-drawer(md-permanent="full")
-    md-list.md-double-line
+    md-list.md-dense.md-double-line
       div(v-for="memo in memos")
         md-list-item(:to="{ name: 'edit', params: { memoUid: memo['.key']} }")
           md-icon description
