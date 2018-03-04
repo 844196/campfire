@@ -1,15 +1,16 @@
 <template lang="pug">
-form(@submit.prevent="onSubmit")
+div
   md-field
     label Title
-    md-input(v-model="memoOrEmpty.title")
+    md-input(v-model="cached.title", @input.native="update")
   md-field
     label Content
-    md-textarea(v-model="memoOrEmpty.content")
-  md-button(type="submit").md-raised.md-primary save
+    md-textarea(v-model="cached.content", @input.native="update")
 </template>
 
 <script>
+import debounce from 'throttle-debounce/debounce'
+
 export default {
   name: 'Editor',
   props: {
@@ -20,25 +21,31 @@ export default {
   },
   data () {
     return {
-      memo: {}
+      cached: {}
     }
   },
   computed: {
-    memoOrEmpty () {
-      const m = { ...this.$store.getters['memos/findOrEmpty'](this.memoUid) }
-      this.memo = m // eslint-disable-line vue/no-side-effects-in-computed-properties
-      return m
+    authorUid () {
+      return this.$store.state.auth.user.uid
+    },
+    origin () {
+      return this.$store.getters['memos/findOrEmpty'](this.memoUid)
+    }
+  },
+  watch: {
+    'origin': function (origin) {
+      this.cached = { ...origin }
     }
   },
   methods: {
-    onSubmit () {
+    update: debounce(750, function () {
       this.$store.dispatch('memos/edit', {
         memoUid: this.memoUid,
-        authorUid: this.$store.getters['auth/user'].uid,
-        title: this.memo.title,
-        content: this.memo.content
+        authorUid: this.authorUid,
+        title: this.cached.title,
+        content: this.cached.content
       })
-    }
+    })
   }
 }
 </script>
