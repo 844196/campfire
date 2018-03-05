@@ -6,15 +6,11 @@ export default {
     user: null
   },
   getters: {
-    user: state => state.user,
     authed: state => !!state.user
   },
   mutations: {
-    loggedIn (state, user) {
+    changeUser (state, user) {
       state.user = user
-    },
-    loggedOut (state) {
-      state.user = null
     }
   },
   actions: {
@@ -22,7 +18,7 @@ export default {
       return new Promise(resolve => {
         let unsubFunc
         unsubFunc = firebase.auth().onAuthStateChanged(user => {
-          commit(user ? 'loggedIn' : 'loggedOut', user)
+          commit('changeUser', user || null)
           unsubFunc()
           resolve()
         })
@@ -30,12 +26,12 @@ export default {
     },
     login ({ commit }, { email, password }) {
       return firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
-        commit('loggedIn', user)
+        commit('changeUser', user)
       })
     },
     logout ({ commit }) {
       return firebase.auth().signOut().then(() => {
-        commit('loggedOut')
+        commit('changeUser', null)
       })
     }
   }
