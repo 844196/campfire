@@ -6,6 +6,9 @@ div
   md-field
     label Content
     md-textarea(v-model="cached.content", @input.native="update")
+  md-snackbar(md-position="left", :md-duration="2000", :md-active.sync="showSnackbar")
+    span {{ snackbarMessage }}
+    md-button.md-primary(@click="showSnackbar = false") CLOSE
 </template>
 
 <script>
@@ -21,7 +24,9 @@ export default {
   },
   data () {
     return {
-      cached: {}
+      cached: {},
+      snackbarMessage: '',
+      showSnackbar: false
     }
   },
   computed: {
@@ -38,13 +43,15 @@ export default {
     }
   },
   methods: {
-    update: debounce(750, function () {
-      this.$store.dispatch('memos/edit', {
+    update: debounce(750, async function () {
+      await this.$store.dispatch('memos/edit', {
         memoUid: this.memoUid,
         authorUid: this.authorUid,
         title: this.cached.title,
         content: this.cached.content
       })
+      this.snackbarMessage = 'Autosave completed'
+      this.showSnackbar = true
     })
   }
 }
