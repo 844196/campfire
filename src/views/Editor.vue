@@ -6,14 +6,19 @@ div
   md-field
     label Content
     md-textarea(v-model="cached.content", @input.native="update")
+  previewer(v-model="cached.content")
 </template>
 
 <script>
 import Vue from 'vue'
+import Previewer from '@/components/Previewer.vue'
 import debounce from 'throttle-debounce/debounce'
 
 export default Vue.extend({
   name: 'Editor',
+  components: {
+    Previewer
+  },
   props: {
     memoUid: {
       type: String,
