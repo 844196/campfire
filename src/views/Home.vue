@@ -20,9 +20,10 @@ md-app
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState } from 'vuex'
 
-export default {
+export default Vue.extend({
   name: 'Home',
   computed: {
     ...mapState({
@@ -40,7 +41,7 @@ export default {
       })
     }
   }
-}
+})
 </script>
 
 <style lang="stylus">

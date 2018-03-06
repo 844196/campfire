@@ -12,9 +12,10 @@ div
 </template>
 
 <script>
+import Vue from 'vue'
 import debounce from 'throttle-debounce/debounce'
 
-export default {
+export default Vue.extend({
   name: 'Editor',
   props: {
     memoUid: {
@@ -60,5 +61,5 @@ export default {
       this.showSnackbar = true
     })
   }
-}
+})
 </script>
