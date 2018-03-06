@@ -6,9 +6,6 @@ div
   md-field
     label Content
     md-textarea(v-model="cached.content", @input.native="update")
-  md-snackbar(md-position="left", :md-duration="2000", :md-active.sync="showSnackbar")
-    span {{ snackbarMessage }}
-    md-button.md-primary(@click="showSnackbar = false") CLOSE
 </template>
 
 <script>
@@ -25,9 +22,7 @@ export default Vue.extend({
   },
   data () {
     return {
-      cached: {},
-      snackbarMessage: '',
-      showSnackbar: false
+      cached: {}
     }
   },
   computed: {
@@ -57,8 +52,10 @@ export default Vue.extend({
         title: this.cached.title,
         content: this.cached.content
       })
-      this.snackbarMessage = 'Autosave completed'
-      this.showSnackbar = true
+      this.$store.dispatch('snackbar/show', {
+        message: 'Autosave completed',
+        duration: 2000
+      })
     })
   }
 })

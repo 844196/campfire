@@ -11,9 +11,6 @@
           md-input(v-model="password", type="password", autocomplete="current-password", :disabled="connecting")
       md-card-actions
         md-button.md-raised.md-primary(type="submit", :disabled="!canSubmit") LOGIN
-      md-snackbar(md-position="left", :md-duration="4000", :md-active.sync="showSnackbar")
-        span {{ snackbarMessage }}
-        md-button.md-primary(@click="showSnackbar = false") CLOSE
 </template>
 
 <script>
@@ -25,9 +22,7 @@ export default Vue.extend({
     return {
       email: '',
       password: '',
-      connecting: false,
-      snackbarMessage: '',
-      showSnackbar: false
+      connecting: false
     }
   },
   computed: {
@@ -43,10 +38,12 @@ export default Vue.extend({
           this.$router.push(this.$route.query.redirect || '/')
         })
         .catch(e => {
+          this.$store.dispatch('snackbar/show', {
+            message: e.message,
+            duration: 4000
+          })
           this.connecting = false
-          this.showSnackbar = true
           console.error(e)
-          this.snackbarMessage = e.message
         })
     }
   }
