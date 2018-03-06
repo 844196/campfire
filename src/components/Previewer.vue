@@ -6,7 +6,7 @@
 import Vue from 'vue'
 import UMLEncoder from 'plantuml-encoder'
 import MarkdownIt from 'markdown-it'
-import JsSHA from 'jssha'
+import { sha256 } from '@/utils/hash'
 import throttle from 'throttle-debounce/throttle'
 
 const cacheStore = {
@@ -29,12 +29,6 @@ const cacheStore = {
     }
     this.container.get(category).delete(cacheId)
   }
-}
-
-const sha256 = (text) => {
-  const s = new JsSHA('SHA-256', 'TEXT')
-  s.update(text)
-  return s.getHash('HEX')
 }
 
 const md = new MarkdownIt()
