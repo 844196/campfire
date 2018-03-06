@@ -38,11 +38,17 @@ export default {
     }
   },
   watch: {
-    'origin': function (origin) {
-      this.cached = { ...origin }
+    'origin': function () {
+      this.setCache()
     }
   },
+  created () {
+    this.setCache()
+  },
   methods: {
+    setCache () {
+      this.cached = { ...this.origin }
+    },
     update: debounce(750, async function () {
       await this.$store.dispatch('memos/edit', {
         memoUid: this.memoUid,
