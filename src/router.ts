@@ -42,7 +42,7 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const requiresAuth = to.matched.some(r => r.meta.requiresAuth)
   const authed = store.getters['auth/authed']
 

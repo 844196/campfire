@@ -1,4 +1,9 @@
 import firebase from '@/firebase'
+import { User } from 'firebase'
+
+interface State {
+  user: User | null
+}
 
 export default {
   namespaced: true,
