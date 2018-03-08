@@ -1,7 +1,6 @@
 <template lang="pug">
 md-snackbar(:md-position="options.position", :md-duration="options.duration", :md-active.sync="visibility")
   span {{ message }}
-  md-button.md-primary(@click="visibility = false") Close
 </template>
 
 <script lang="ts">
