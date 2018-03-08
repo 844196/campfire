@@ -1,7 +1,7 @@
 <template lang="pug">
-md-snackbar(:md-position="options.position", :md-duration="options.duration", :md-active.sync="visible")
+md-snackbar(:md-position="options.position", :md-duration="options.duration", :md-active.sync="visibility")
   span {{ message }}
-  md-button.md-primary(@click="visible = false") Close
+  md-button.md-primary(@click="visibility = false") Close
 </template>
 
 <script lang="ts">
@@ -11,19 +11,16 @@ import { mapSnackbarState, mapSnackbarMutations } from '@/store/snackbar'
 export default Vue.extend({
   name: 'Snackbar',
   computed: {
-    ...mapSnackbarState(['message', 'options']),
-    ...mapSnackbarState({ visibility: 'visible' }),
-    visible: {
+    ...mapSnackbarState(['message', 'options', 'visible']),
+    visibility: {
       get (): boolean {
-        return this.visibility
+        return this.visible
       },
       set (value: boolean): void {
         this.changeVisibility(value)
       }
     }
   },
-  methods: {
-    ...mapSnackbarMutations(['changeVisibility'])
-  }
+  methods: mapSnackbarMutations(['changeVisibility'])
 })
 </script>
