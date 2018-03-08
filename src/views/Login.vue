@@ -13,8 +13,10 @@
         md-button.md-raised.md-primary(type="submit", :disabled="!canSubmit") LOGIN
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
+import { mapAuthActions } from '@/store/auth'
+import { mapSnackbarActions } from '@/store/snackbar'
 
 export default Vue.extend({
   name: 'Login',
@@ -26,25 +28,23 @@ export default Vue.extend({
     }
   },
   computed: {
-    canSubmit () {
+    canSubmit (): boolean {
       return this.email !== '' && this.password !== '' && this.connecting === false
     }
   },
   methods: {
-    onSubmit () {
+    ...mapAuthActions(['login']),
+    ...mapSnackbarActions({ showSnackbar: 'show' }),
+    async onSubmit () {
       this.connecting = true
-      this.$store.dispatch('auth/login', { email: this.email, password: this.password })
-        .then(() => {
-          this.$router.push(this.$route.query.redirect || '/')
-        })
-        .catch(e => {
-          this.$store.dispatch('snackbar/show', {
-            message: e.message,
-            duration: 4000
-          })
-          this.connecting = false
-          console.error(e)
-        })
+      try {
+        await this.login({ email: this.email, password: this.password })
+        this.$router.push(this.$route.query.redirect || '/')
+      } catch (e) {
+        this.showSnackbar({ message: e.message, duration: 4000 })
+        console.error(e)
+        this.connecting = false
+      }
     }
   }
 })
