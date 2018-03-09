@@ -5,12 +5,12 @@ md-snackbar(:md-position="options.position", :md-duration="options.duration", :m
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapSnackbarState, mapSnackbarMutations } from '@/store/snackbar'
+import { snackbarHelpers } from '@/store/snackbar'
 
 export default Vue.extend({
   name: 'Snackbar',
   computed: {
-    ...mapSnackbarState(['message', 'options', 'visible']),
+    ...snackbarHelpers.mapState(['message', 'options', 'visible']),
     visibility: {
       get (): boolean {
         return this.visible
@@ -20,6 +20,6 @@ export default Vue.extend({
       }
     }
   },
-  methods: mapSnackbarMutations(['changeVisibility'])
+  methods: snackbarHelpers.mapMutations(['changeVisibility'])
 })
 </script>

@@ -15,8 +15,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapAuthActions } from '@/store/auth'
-import { mapSnackbarActions } from '@/store/snackbar'
+import { authHelpers } from '@/store/auth'
+import { snackbarHelpers } from '@/store/snackbar'
 
 export default Vue.extend({
   name: 'Login',
@@ -33,8 +33,8 @@ export default Vue.extend({
     }
   },
   methods: {
-    ...mapAuthActions(['login']),
-    ...mapSnackbarActions({ showSnackbar: 'show' }),
+    ...authHelpers.mapActions(['login']),
+    ...snackbarHelpers.mapActions({ showSnackbar: 'show' }),
     async onSubmit () {
       this.connecting = true
       try {

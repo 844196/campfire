@@ -34,7 +34,7 @@ const mutations: DefineMutations<Mutations, State> = {
 export interface Actions {
   init: void
   login: AuthCredential
-  logout: void
+  logout: undefined
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
   init ({ commit }) {
@@ -70,15 +70,4 @@ export default {
   actions
 }
 
-const {
-  mapState,
-  mapGetters,
-  mapMutations,
-  mapActions
-} = createNamespacedHelpers<State, Getters, Mutations, Actions>('auth')
-export {
-  mapState as mapAuthState,
-  mapGetters as mapAuthGetters,
-  mapMutations as mapAuthMutations,
-  mapActions as mapAuthActions
-}
+export const authHelpers = createNamespacedHelpers<State, Getters, Mutations, Actions>('auth')

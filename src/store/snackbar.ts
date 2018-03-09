@@ -71,15 +71,4 @@ export default {
   actions
 }
 
-const {
-  mapState,
-  mapGetters,
-  mapMutations,
-  mapActions
-} = createNamespacedHelpers<State, Getters, Mutations, Actions>('snackbar')
-export {
-  mapState as mapSnackbarState,
-  mapGetters as mapSnackbarGetters,
-  mapMutations as mapSnackbarMutations,
-  mapActions as mapSnackbarActions
-}
+export const snackbarHelpers = createNamespacedHelpers<State, Getters, Mutations, Actions>('snackbar')
