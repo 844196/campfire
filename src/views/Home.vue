@@ -19,26 +19,26 @@ md-app
     router-view
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { authHelpers } from '@/store/auth'
+import { memosHelpers } from '@/store/memos'
 
 export default Vue.extend({
   name: 'Home',
   computed: {
-    ...mapState({
-      user: state => state.auth.user,
-      memos: state => state.memos.all
-    })
+    ...authHelpers.mapState(['user']),
+    ...memosHelpers.mapState({ memos: 'all' })
   },
   created () {
-    this.$store.dispatch('memos/init')
+    this._memosInit(undefined)
   },
   methods: {
-    logout () {
-      this.$store.dispatch('auth/logout').then(() => {
-        this.$router.push({ name: 'login' })
-      })
+    ...authHelpers.mapActions({ _logout: 'logout' }),
+    ...memosHelpers.mapActions({ _memosInit: 'init' }),
+    async logout () {
+      await this._logout(undefined)
+      this.$router.push({ name: 'login' })
     }
   }
 })

@@ -32,7 +32,7 @@ const mutations: DefineMutations<Mutations, State> = {
 }
 
 export interface Actions {
-  init: void
+  init: undefined
   login: AuthCredential
   logout: undefined
 }

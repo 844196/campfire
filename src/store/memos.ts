@@ -1,5 +1,6 @@
 import firebase from '@/firebase'
 import { firebaseAction } from 'vuexfire'
+import { createNamespacedHelpers } from 'vuex'
 import { DefineGetters, DefineMutations, DefineActions } from 'vuex-type-helper'
 
 const memosRef = firebase.database().ref('memos')
@@ -28,7 +29,7 @@ export interface Mutations {}
 const mutations: DefineMutations<Mutations, State> = {}
 
 export interface Actions {
-  init: void
+  init: undefined
   edit: {
     memoUid: string,
     authorUid: string,
@@ -57,3 +58,5 @@ export default {
   mutations,
   actions
 }
+
+export const memosHelpers = createNamespacedHelpers<State, Getters, Mutations, Actions>('memos')
