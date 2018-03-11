@@ -38,10 +38,10 @@ export interface Actions {
   }
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
-  init: firebaseAction(({ bindFirebaseRef }: any) => {
+  init: firebaseAction(({ bindFirebaseRef }) => {
     bindFirebaseRef('all', memosRef)
   }),
-  edit: firebaseAction((_: any, { memoUid, authorUid, title, content }: any) => {
+  edit: firebaseAction((_, { memoUid, authorUid, title, content }) => {
     memosRef.child(memoUid).set({
       authorUid,
       title,
