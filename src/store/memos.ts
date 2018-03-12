@@ -33,24 +33,19 @@ const mutations: DefineMutations<Mutations, State> = {}
 
 export interface Actions {
   init: undefined
-  edit: {
-    memoUid: string,
-    authorUid: string,
-    title: string,
-    content: string
+  createOrUpdate: {
+    memo: Memo
   }
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
   init: firebaseAction(({ bindFirebaseRef }) => {
     bindFirebaseRef('raws', memosRef)
   }),
-  edit: firebaseAction((_, { memoUid, authorUid, title, content }) => {
-    memosRef.child(memoUid).set({
-      authorUid,
-      title,
-      content,
-      updatedAt: new Date().toISOString()
-    })
+  createOrUpdate: firebaseAction((_, { memo }) => {
+    // FIXME 更新日時はMemo自身が返すように
+    let deflated = memo.deflate()
+    deflated.updatedAt = new Date().toISOString()
+    memosRef.child(memo.memoUid).set(deflated)
   })
 }
 

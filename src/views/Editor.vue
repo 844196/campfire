@@ -51,12 +51,7 @@ export default Vue.extend({
       this.cached = this.origin
     },
     update: debounce(750, async function () {
-      await this.$store.dispatch('memos/edit', {
-        memoUid: this.memoUid,
-        authorUid: this.authorUid,
-        title: this.cached.title,
-        content: this.cached.content
-      })
+      await this.$store.dispatch('memos/createOrUpdate', { memo: this.cached })
       this.$store.dispatch('snackbar/show', {
         message: 'Autosave completed',
         duration: 2000
