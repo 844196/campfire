@@ -35,7 +35,7 @@ export default Vue.extend({
       return this.$store.state.auth.user.uid
     },
     origin () {
-      return this.$store.getters['memos/findOrEmpty'](this.memoUid)
+      return this.$store.getters['memos/findOrEmpty'](this.memoUid, this.authorUid)
     }
   },
   watch: {
@@ -48,7 +48,7 @@ export default Vue.extend({
   },
   methods: {
     setCache () {
-      this.cached = { ...this.origin }
+      this.cached = this.origin
     },
     update: debounce(750, async function () {
       await this.$store.dispatch('memos/edit', {

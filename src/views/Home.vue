@@ -3,7 +3,7 @@ md-app
   md-app-drawer(md-permanent="full")
     md-list.md-dense.md-double-line
       div(v-for="memo in memos")
-        md-list-item(:to="{ name: 'edit', params: { memoUid: memo['.key']} }")
+        md-list-item(:to="{ name: 'edit', params: { memoUid: memo.memoUid } }")
           md-icon description
           .md-list-item-text
             span {{ memo.title }}

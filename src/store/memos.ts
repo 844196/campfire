@@ -2,11 +2,9 @@ import firebase from '@/firebase'
 import { firebaseAction } from 'vuexfire'
 import { createNamespacedHelpers } from 'vuex'
 import { DefineGetters, DefineMutations, DefineActions } from 'vuex-type-helper'
+import { RawMemo, Memo } from '@/domain/memo'
 
 const memosRef = firebase.database().ref('memos')
-
-type RawMemo = any
-type Memo = any
 
 export interface State {
   raws: Array<RawMemo>
@@ -17,15 +15,15 @@ const state: State = {
 
 export interface Getters {
   all: Array<Memo>
-  findOrEmpty: (memoUid: string) => Memo
+  findOrEmpty: (memoUid: string, authorUid: string) => Memo
 }
 const getters: DefineGetters<Getters, State> = {
   all (state) {
-    return state.raws as Array<Memo>
+    return state.raws.map(raw => Memo.inflate(raw))
   },
   findOrEmpty (_, getters) {
-    return (memoUid: string) => {
-      return getters.all.find(m => m['.key'] === memoUid) || { title: '', content: '' }
+    return (memoUid: string, authorUid: string) => {
+      return getters.all.find(m => m.memoUid === memoUid) || Memo.empty(memoUid, authorUid)
     }
   }
 }
