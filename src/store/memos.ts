@@ -5,22 +5,27 @@ import { DefineGetters, DefineMutations, DefineActions } from 'vuex-type-helper'
 
 const memosRef = firebase.database().ref('memos')
 
+type RawMemo = any
 type Memo = any
 
 export interface State {
-  all: Array<Memo>
+  raws: Array<RawMemo>
 }
 const state: State = {
-  all: []
+  raws: []
 }
 
 export interface Getters {
+  all: Array<Memo>
   findOrEmpty: (memoUid: string) => Memo
 }
 const getters: DefineGetters<Getters, State> = {
-  findOrEmpty (state) {
+  all (state) {
+    return state.raws as Array<Memo>
+  },
+  findOrEmpty (_, getters) {
     return (memoUid: string) => {
-      return state.all.find((m: Memo) => m['.key'] === memoUid) || { title: '', content: '' }
+      return getters.all.find(m => m['.key'] === memoUid) || { title: '', content: '' }
     }
   }
 }
@@ -39,7 +44,7 @@ export interface Actions {
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
   init: firebaseAction(({ bindFirebaseRef }) => {
-    bindFirebaseRef('all', memosRef)
+    bindFirebaseRef('raws', memosRef)
   }),
   edit: firebaseAction((_, { memoUid, authorUid, title, content }) => {
     memosRef.child(memoUid).set({

@@ -28,7 +28,7 @@ export default Vue.extend({
   name: 'Home',
   computed: {
     ...authHelpers.mapState(['user']),
-    ...memosHelpers.mapState({ memos: 'all' })
+    ...memosHelpers.mapGetters({ memos: 'all' })
   },
   created () {
     this._memosInit(undefined)
