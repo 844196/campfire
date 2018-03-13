@@ -2,17 +2,21 @@
 div
   md-field
     label Title
-    md-input(v-model="cached.title", @input.native="update")
+    md-input(v-model="cached.title", @input.native="createOrUpdate")
   md-field
     label Content
-    md-textarea(v-model="cached.content", @input.native="update")
+    md-textarea(v-model="cached.content", @input.native="createOrUpdate")
   previewer(v-model="cached.content")
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import Previewer from '@/components/Previewer.vue'
-import debounce from 'throttle-debounce/debounce'
+import { debounce } from 'throttle-debounce'
+import { memosHelpers } from '@/store/memos'
+import { snackbarHelpers } from '@/store/snackbar'
+import { authHelpers } from '@/store/auth'
+import { Memo } from '@/domain/memo'
 
 export default Vue.extend({
   name: 'Editor',
@@ -31,11 +35,9 @@ export default Vue.extend({
     }
   },
   computed: {
-    authorUid () {
-      return this.$store.state.auth.user.uid
-    },
-    origin () {
-      return this.$store.getters['memos/findOrEmpty'](this.memoUid, this.authorUid)
+    ...authHelpers.mapState({ author: 'user' }),
+    origin (): Memo {
+      return this.findOrEmpty()(this.memoUid, this.author!.uid)
     }
   },
   watch: {
@@ -47,15 +49,15 @@ export default Vue.extend({
     this.setCache()
   },
   methods: {
+    ...memosHelpers.mapGetters(['findOrEmpty']),
+    ...memosHelpers.mapActions(['createOrUpdate']),
+    ...snackbarHelpers.mapActions({ showSnackbar: 'show' }),
     setCache () {
       this.cached = this.origin
     },
-    update: debounce(750, async function () {
-      await this.$store.dispatch('memos/createOrUpdate', { memo: this.cached })
-      this.$store.dispatch('snackbar/show', {
-        message: 'Autosave completed',
-        duration: 2000
-      })
+    createOrUpdate: debounce(750, async function (this: any) {
+      await this.createOrUpdate({ memo: this.cached })
+      await this.showSnackbar({ message: 'Autosave completed', duration: 2000 })
     })
   }
 })
