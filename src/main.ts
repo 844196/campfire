@@ -1,4 +1,4 @@
-import Vue, { ComponentOptions } from 'vue'
+import Vue from 'vue'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
@@ -15,5 +15,5 @@ store.dispatch('auth/init').then(() => {
     router,
     store,
     render: h => h(App)
-  } as ComponentOptions<Vue>).$mount('#app')
+  }).$mount('#app')
 })
