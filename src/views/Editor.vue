@@ -1,9 +1,6 @@
 <template lang="pug">
 div
   md-field
-    label Title
-    md-input(v-model="cached.title", @input.native="createOrUpdate")
-  md-field
     label Content
     md-textarea(v-model="cached.content", @input.native="createOrUpdate")
   previewer(v-model="cached.content")
@@ -47,9 +44,6 @@ export default Vue.extend({
     this.setCache()
   },
   methods: {
-    ...memosHelpers.mapGetters(['findOrEmpty']),
-    ...memosHelpers.mapActions(['createOrUpdate']),
-    ...snackbarHelpers.mapActions({ showSnackbar: 'show' }),
     setCache () {
       this.cached = this.origin
     },
