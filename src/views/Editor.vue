@@ -13,8 +13,6 @@ div
 import Vue from 'vue'
 import Previewer from '@/components/Previewer.vue'
 import { debounce } from 'throttle-debounce'
-import { memosHelpers } from '@/store/memos'
-import { snackbarHelpers } from '@/store/snackbar'
 import { authHelpers } from '@/store/auth'
 import { Memo } from '@/domain/memo'
 
@@ -37,7 +35,7 @@ export default Vue.extend({
   computed: {
     ...authHelpers.mapState({ author: 'user' }),
     origin (): Memo {
-      return this.findOrEmpty()(this.memoUid, this.author!.uid)
+      return this.$store.getters['memos/findOrEmpty'](this.memoUid, this.author!.uid)
     }
   },
   watch: {
@@ -56,8 +54,13 @@ export default Vue.extend({
       this.cached = this.origin
     },
     createOrUpdate: debounce(750, async function (this: any) {
-      await this.createOrUpdate({ memo: this.cached })
-      await this.showSnackbar({ message: 'Autosave completed', duration: 2000 })
+      await this.$store.dispatch('memos/createOrUpdate', {
+        memo: this.cached
+      })
+      await this.$store.dispatch('snackbar/show', {
+        message: 'Autosave completed',
+        duration: 2000
+      })
     })
   }
 })
