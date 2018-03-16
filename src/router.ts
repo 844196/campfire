@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router, { Route } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Editor from '@/views/Editor.vue'
@@ -7,6 +7,12 @@ import store from '@/store'
 import uuid from 'uuid/v4'
 
 Vue.use(Router)
+
+const memoInjector = ({ params }: Route): object => {
+  const memoUid = params.memoUid || uuid()
+  const authorUid = store.state.auth.user!.uid
+  return { memo: store.getters['memos/findOrEmpty'](memoUid, authorUid) }
+}
 
 const router = new Router({
   mode: 'history',
@@ -27,15 +33,13 @@ const router = new Router({
           path: 'new',
           name: 'new',
           component: Editor,
-          props: () => {
-            return { memoUid: uuid() }
-          }
+          props: memoInjector
         },
         {
           path: 'edit/:memoUid',
           name: 'edit',
           component: Editor,
-          props: true
+          props: memoInjector
         }
       ]
     }
