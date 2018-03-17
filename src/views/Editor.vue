@@ -1,9 +1,7 @@
 <template lang="pug">
-div
-  md-field
-    label Content
-    md-textarea(v-model="memo.content", @input.native="createOrUpdate")
-  previewer(v-model="memo.content")
+#editor
+  textarea.textarea(v-model="memo.content", @input="createOrUpdate")
+  previewer.previewer(v-model="memo.content")
 </template>
 
 <script lang="ts">
@@ -35,3 +33,28 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style lang="stylus" scoped>
+#editor
+  height: 100%
+  display: grid
+  grid-template-rows: 100%
+  grid-template-columns: 50% 50%
+  grid-gap: .5em
+
+  .textarea
+    height: 100%
+    border: none
+    grid-column: 1 / 2
+    resize: none
+    font-size: 13px
+    font-family: Consolas,Liberation Mono,Menlo,Courier,monospace
+    line-height: 1.5
+    &:focus
+      outline: 0
+
+  .previewer
+    height: 100%
+    overflow-y: auto
+    grid-column: 2 / 2
+</style>

@@ -44,7 +44,11 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus">
+html
+  overflow: hidden
 body
+  height: 100%
+.md-app-scroller
   height: 100%
 </style>
 
