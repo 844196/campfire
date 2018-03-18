@@ -36,6 +36,9 @@ export interface Actions {
   createOrUpdate: {
     memo: Memo
   }
+  delete: {
+    memoUid: string
+  }
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
   init: firebaseAction(({ bindFirebaseRef }) => {
@@ -46,6 +49,9 @@ const actions: DefineActions<Actions, State, Mutations, Getters> = {
     let deflated = memo.deflate()
     deflated.updatedAt = new Date().toISOString()
     memosRef.child(memo.memoUid).set(deflated)
+  }),
+  delete: firebaseAction((_, { memoUid }) => {
+    memosRef.child(memoUid).remove()
   })
 }
 

@@ -7,6 +7,11 @@ md-app
           .md-list-item-text
             span {{ memo.title }}
             span {{ memo.updatedAt }}
+          md-menu
+            md-button.md-icon-button.md-list-action(@click.prevent="/* NOOP */", md-menu-trigger)
+              md-icon more_vert
+            md-menu-content
+              md-menu-item(@click="deleteMemo(memo.memoUid)") delete
         md-divider
     .user.md-elevation-1
       span(style="flex:1")
@@ -35,6 +40,9 @@ export default Vue.extend({
   methods: {
     ...authHelpers.mapActions({ _logout: 'logout' }),
     ...memosHelpers.mapActions({ _memosInit: 'init' }),
+    async deleteMemo (memoUid: string) {
+      await this.$store.dispatch('memos/delete', { memoUid })
+    },
     async logout () {
       await this._logout(undefined)
       this.$router.push({ name: 'login' })
