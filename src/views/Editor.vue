@@ -9,6 +9,7 @@ import Vue from 'vue'
 import Previewer from '@/components/Previewer.vue'
 import { debounce } from 'throttle-debounce'
 import { Memo } from '@/domain/memo'
+import { difference } from 'lodash'
 
 export default Vue.extend({
   name: 'Editor',
@@ -30,6 +31,16 @@ export default Vue.extend({
     'memo' (nv) {
       this.cached = nv.content
     }
+  },
+  created () {
+    this.$store.watch(
+      (_, getters?) => getters!['memos/all'],
+      (nv: Array<Memo>, ov: Array<Memo>) => {
+        const memoUid = (m: Memo) => m.memoUid
+        const subDiff = difference(ov.map(memoUid), nv.map(memoUid))
+        if (subDiff.includes(this.memo.memoUid)) this.$router.push('/')
+      }
+    )
   },
   methods: {
     async onInput () {

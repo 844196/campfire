@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/firebase": "^3.2.1",
     "@types/jssha": "^0.0.29",
+    "@types/lodash": "^4.14.105",
     "@types/markdown-it": "^0.0.4",
     "@types/throttle-debounce": "^1.0.0",
     "@types/uuid": "^3.4.3",
@@ -31,6 +32,7 @@
     "@vue/cli-service": "^3.0.0-beta.1",
     "@vue/eslint-config-standard": "^3.0.0-beta.1",
     "@vue/eslint-config-typescript": "^3.0.0-beta.6",
+    "lodash": "^4.17.5",
     "pug": "^2.0.0-rc.4",
     "pug-loader": "^2.3.0",
     "stylus": "^0.54.5",
