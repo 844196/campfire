@@ -1,13 +1,14 @@
 <template lang="pug">
 #editor
-  textarea.textarea(v-model="memo.content", @input="createOrUpdate")
-  previewer.previewer(v-model="memo.content")
+  textarea.textarea(v-model="memo.content", @input="onInput")
+  previewer.previewer(v-model="cached")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Previewer from '@/components/Previewer.vue'
 import { debounce } from 'throttle-debounce'
+import { Memo } from '@/domain/memo'
 
 export default Vue.extend({
   name: 'Editor',
@@ -20,7 +21,21 @@ export default Vue.extend({
       required: true
     }
   },
+  data () {
+    return {
+      cached: this.memo.content
+    }
+  },
+  watch: {
+    'memo' (nv) {
+      this.cached = nv.content
+    }
+  },
   methods: {
+    async onInput () {
+      this.cached = this.memo.content
+      await this.createOrUpdate()
+    },
     createOrUpdate: debounce(750, async function (this: any) {
       await this.$store.dispatch('memos/createOrUpdate', {
         memo: this.memo
