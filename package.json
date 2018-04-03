@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "push-dir --dir dist --branch gh-pages"
   },
   "dependencies": {
     "firebase": "^4.10.1",
@@ -35,6 +36,7 @@
     "lodash": "^4.17.5",
     "pug": "^2.0.0-rc.4",
     "pug-loader": "^2.3.0",
+    "push-dir": "^0.4.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-material": "^1.0.0-beta-7",
@@ -67,5 +69,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "vue": {
+    "baseUrl": "/campfire/"
+  }
 }

@@ -16,6 +16,7 @@ const memoInjector = ({ params }: Route): object => {
 
 const router = new Router({
   mode: 'history',
+  base: '/campfire/',
   routes: [
     {
       path: '/login',
