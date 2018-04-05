@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "push-dir --dir dist --branch gh-pages"
+    "deploy": "push-dir --verbose --cleanup --dir dist --branch gh-pages"
   },
   "dependencies": {
     "firebase": "^4.10.1",
