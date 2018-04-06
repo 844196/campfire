@@ -1,22 +1,14 @@
 <template lang="pug">
-#login.md-layout.md-alignment-center-center
-  md-card.md-layout-item.md-size-33.md-small-size-66
-    form(@submit.prevent="onSubmit")
-      md-card-content
-        md-field
-          label Email
-          md-input(v-model="email", autocomplete="username email", :disabled="connecting")
-        md-field
-          label Password
-          md-input(v-model="password", type="password", autocomplete="current-password", :disabled="connecting")
-      md-card-actions
-        md-button.md-raised.md-primary(type="submit", :disabled="!canSubmit") LOGIN
+#login
+  form(@submit.prevent="onSubmit")
+    input(v-model="email", autocomplete="username email", :disabled="connecting")
+    input(v-model="password", type="password", autocomplete="current-password", :disabled="connecting")
+    button(type="submit", :disabled="!canSubmit") Login
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { authHelpers } from '@/store/auth'
-import { snackbarHelpers } from '@/store/snackbar'
 
 export default Vue.extend({
   name: 'Login',
@@ -34,14 +26,12 @@ export default Vue.extend({
   },
   methods: {
     ...authHelpers.mapActions(['login']),
-    ...snackbarHelpers.mapActions({ showSnackbar: 'show' }),
     async onSubmit () {
       this.connecting = true
       try {
         await this.login({ email: this.email, password: this.password })
         this.$router.push(this.$route.query.redirect || '/')
       } catch (e) {
-        this.showSnackbar({ message: e.message, duration: 4000 })
         console.error(e)
         this.connecting = false
       }
@@ -49,13 +39,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style lang="stylus">
-body
-  height: 100%
-</style>
-
-<style lang="stylus" scoped>
-#login
-  height: 100%
-</style>

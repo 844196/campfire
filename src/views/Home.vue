@@ -1,26 +1,15 @@
 <template lang="pug">
-md-app
-  md-app-drawer(md-permanent="full")
-    md-list.md-dense.md-double-line
-      div(v-for="memo in memos")
-        md-list-item(:to="{ name: 'edit', params: { memoUid: memo.memoUid } }")
-          .md-list-item-text
-            span {{ memo.title }}
-            span {{ memo.updatedAt }}
-          md-menu
-            md-button.md-icon-button.md-list-action(@click.prevent="/* NOOP */", md-menu-trigger)
-              md-icon more_vert
-            md-menu-content
-              md-menu-item(@click="deleteMemo(memo.memoUid)") delete
-        md-divider
-    .user.md-elevation-1
-      span(style="flex:1")
-        md-icon person
-        span(style="margin-left:8px") {{ user.email }}
-      md-button(:md-ripple="false", @click="logout").md-dense.md-icon-button
-        md-icon exit_to_app
-  md-app-content
-    router-view
+div
+  div(v-for="memo in memos")
+    div
+      router-link(:to="{ name: 'edit', params: { memoUid: memo.memoUid } }")
+        span {{ memo.title }}
+        span {{ memo.updatedAt }}
+      button(@click="deleteMemo(memo.memoUid)") Delete
+  div
+    span {{ user.email }}
+      button(@click="logout") Logout
+  router-view
 </template>
 
 <script lang="ts">
@@ -50,38 +39,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style lang="stylus">
-html
-  overflow: hidden
-body
-  height: 100%
-.md-app-scroller
-  height: 100%
-</style>
-
-<style lang="stylus" scoped>
-.md-app
-  height: 100%
-.md-app-container
-  height: 100%
-.md-drawer
-  width: 270px
-  max-width: 100%
-  background-color: #fafafa
-.md-list
-  background-color: #fafafa
-.user
-  position: absolute
-  bottom: 0
-  box-sizing: border-box
-  width: 100%
-  background-color: #fafafa
-  padding: 16px
-  display: flex
-  align-items: center
-.user *
-  vertical-align: middle
-.md-empty-state
-  height: 100%
-</style>

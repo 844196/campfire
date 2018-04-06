@@ -15,7 +15,7 @@ const memoInjector = ({ params }: Route): object => {
 }
 
 const router = new Router({
-  mode: 'history',
+  mode: 'hash',
   base: '/campfire/',
   routes: [
     {
