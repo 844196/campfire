@@ -33,8 +33,10 @@ const router = new Router({
         {
           path: 'new',
           name: 'new',
-          component: Editor,
-          props: memoInjector
+          redirect: () => {
+            const memo = store.getters['memos/findOrEmpty'](uuid(), store.state.auth.user!.uid)
+            return { name: 'edit', params: { memoUid: memo.memoUid }, props: { memo } }
+          }
         },
         {
           path: 'edit/:memoUid',
