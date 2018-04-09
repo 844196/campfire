@@ -1,10 +1,16 @@
 <template lang="pug">
-#root
-  router-view
+router-view
 </template>
 
 <script>
 import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'reset-css/reset.css'
+import 'element-ui/lib/theme-chalk/index.css'
+import FeatherIcons from 'vue-icon'
+
+Vue.use(ElementUI)
+Vue.use(FeatherIcons, 'v-icon')
 
 export default Vue.extend({
   name: 'App'
@@ -12,5 +18,8 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus">
-@import '~reset-css/reset.css'
+*
+  box-sizing: border-box
+.icon
+  width: 24px
 </style>

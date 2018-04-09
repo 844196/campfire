@@ -3,6 +3,8 @@ declare module '*.vue' {
   export default Vue
 }
 
+declare module 'vue-css-grid'
+
 // FIXIME コールバックの型が正しくない
 type BindOptions = {
   cancelCallback?: () => void

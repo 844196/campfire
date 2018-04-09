@@ -55,3 +55,23 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style lang="stylus" scoped>
+#editor
+  height: 100%
+  display: flex
+.textarea
+  padding: 0 // reset
+  width: 50%
+  border: 0
+  resize: none
+  font-size: 13px
+  line-height: 1.5
+  font-family: Consolas,Liberation Mono,Menlo,Courier,monospace
+  height: 100%
+  &:focus
+    outline: none !important
+.previewer
+  overflow-y: auto
+  width: 50%
+</style>
