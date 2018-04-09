@@ -6,7 +6,12 @@
       router-link(:to="{ name: 'new' }")
         v-icon(name="plus-circle")
     .memolist
-      router-link.memolist-item(v-for="memo in memos", :to="{ name: 'edit', params: { memoUid: memo.memoUid } }", tag="div")
+      router-link.memolist-item(
+        v-for="memo in memos",
+        :key="memo.uuid.toString()",
+        :to="{ name: 'edit', params: { memoUUID: memo.uuid.toString() } }",
+        tag="div"
+      )
         .title {{ memo.title }}
         .updated-at {{ memo.updatedAt }}
   .sidebar-handle(@click="isSidebarVisible = !isSidebarVisible", :class="{ inverted: isSidebarVisible }")
@@ -34,16 +39,14 @@ export default Vue.extend({
     ...memosHelpers.mapGetters({ memos: 'all' })
   },
   created () {
-    this._memosInit(undefined)
+    this.$store.dispatch('memos/init')
   },
   methods: {
-    ...authHelpers.mapActions({ _logout: 'logout' }),
-    ...memosHelpers.mapActions({ _memosInit: 'init' }),
     async deleteMemo (memoUid: string) {
       await this.$store.dispatch('memos/delete', { memoUid })
     },
     async logout () {
-      await this._logout(undefined)
+      await this.$store.dispatch('auth/logout')
       this.$router.push({ name: 'login' })
     },
     toggleSidebar () {

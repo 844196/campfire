@@ -1,18 +1,12 @@
 import Vue from 'vue'
-import Router, { Route } from 'vue-router'
+import Router from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Editor from '@/views/Editor.vue'
 import store from '@/store'
-import uuid from 'uuid/v4'
+import UUID from '@/utils/uuid'
 
 Vue.use(Router)
-
-const memoInjector = ({ params }: Route): object => {
-  const memoUid = params.memoUid || uuid()
-  const authorUid = store.state.auth.user!.uid
-  return { memo: store.getters['memos/findOrEmpty'](memoUid, authorUid) }
-}
 
 const router = new Router({
   mode: 'hash',
@@ -33,16 +27,17 @@ const router = new Router({
         {
           path: 'new',
           name: 'new',
-          redirect: () => {
-            const memo = store.getters['memos/findOrEmpty'](uuid(), store.state.auth.user!.uid)
-            return { name: 'edit', params: { memoUid: memo.memoUid }, props: { memo } }
+          redirect () {
+            return { name: 'edit', params: { memoUUID: UUID.generate().toString() } }
           }
         },
         {
-          path: 'edit/:memoUid',
+          path: 'edit/:memoUUID',
           name: 'edit',
           component: Editor,
-          props: memoInjector
+          props ({ params }) {
+            return { memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid) }
+          }
         }
       ]
     }

@@ -1,14 +1,14 @@
 <template lang="pug">
 #editor
   textarea.textarea(v-model="memo.content", @input="onInput")
-  previewer.previewer(v-model="cached")
+  previewer.previewer(:value="{ content: cached, uuid: memo.uuid }")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Previewer from '@/components/Previewer.vue'
 import { debounce } from 'throttle-debounce'
-import { Memo } from '@/domain/memo'
+import Memo from '@/domain/memo'
 import { difference } from 'lodash'
 
 export default Vue.extend({
@@ -18,7 +18,7 @@ export default Vue.extend({
   },
   props: {
     memo: {
-      type: Object,
+      type: Object as () => Memo,
       required: true
     }
   },
@@ -35,10 +35,10 @@ export default Vue.extend({
   created () {
     this.$store.watch(
       (_, getters?) => getters!['memos/all'],
-      (nv: Array<Memo>, ov: Array<Memo>) => {
-        const memoUid = (m: Memo) => m.memoUid
-        const subDiff = difference(ov.map(memoUid), nv.map(memoUid))
-        if (subDiff.includes(this.memo.memoUid)) this.$router.push('/')
+      (after: Array<Memo>, before: Array<Memo>) => {
+        const uuid = (m: Memo) => m.uuid.toString()
+        const subDiff = difference(before.map(uuid), after.map(uuid))
+        if (subDiff.includes(this.memo.uuid.toString())) this.$router.push('/')
       }
     )
   },

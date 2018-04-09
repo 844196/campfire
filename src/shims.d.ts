@@ -3,7 +3,18 @@ declare module '*.vue' {
   export default Vue
 }
 
-declare module 'vue-css-grid'
+declare module 'is-uuid' {
+  function v1 (str: string): boolean
+  function v2 (str: string): boolean
+  function v3 (str: string): boolean
+  function v4 (str: string): boolean
+  function anyNonNil (str: string): boolean
+  function nil (str: string): boolean
+}
+
+declare module 'plantuml-encoder' {
+  function encode (content: string): string
+}
 
 // FIXIME コールバックの型が正しくない
 type BindOptions = {

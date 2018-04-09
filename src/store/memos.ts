@@ -2,7 +2,8 @@ import firebase from '@/firebase'
 import { firebaseAction } from 'vuexfire'
 import { createNamespacedHelpers } from 'vuex'
 import { DefineGetters, DefineMutations, DefineActions } from 'vuex-type-helper'
-import { RawMemo, Memo } from '@/domain/memo'
+import Memo, { RawMemo } from '@/domain/memo'
+import UUID from '@/utils/uuid'
 
 const memosRef = firebase.database().ref('memos')
 
@@ -15,16 +16,14 @@ const state: State = {
 
 export interface Getters {
   all: Array<Memo>
-  findOrEmpty: (memoUid: string, authorUid: string) => Memo
+  findOrEmpty: (uuid: UUID, authorUid: string) => Memo | null
 }
 const getters: DefineGetters<Getters, State> = {
   all (state) {
     return state.raws.map(raw => Memo.inflate(raw))
   },
   findOrEmpty (_, getters) {
-    return (memoUid: string, authorUid: string) => {
-      return getters.all.find(m => m.memoUid === memoUid) || Memo.empty(memoUid, authorUid)
-    }
+    return (uuid, authorUid) => getters.all.find(m => m.uuid.isEqual(uuid)) || Memo.empty(uuid, authorUid)
   }
 }
 
@@ -37,7 +36,7 @@ export interface Actions {
     memo: Memo
   }
   delete: {
-    memoUid: string
+    uuid: UUID
   }
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
@@ -45,13 +44,10 @@ const actions: DefineActions<Actions, State, Mutations, Getters> = {
     bindFirebaseRef('raws', memosRef)
   }),
   createOrUpdate: firebaseAction((_, { memo }) => {
-    // FIXME 更新日時はMemo自身が返すように
-    let deflated = memo.deflate()
-    deflated.updatedAt = new Date().toISOString()
-    memosRef.child(memo.memoUid).set(deflated)
+    memosRef.child(memo.uuid.toString()).set(memo.deflateForPersist(new Date()))
   }),
-  delete: firebaseAction((_, { memoUid }) => {
-    memosRef.child(memoUid).remove()
+  delete: firebaseAction((_, { uuid }) => {
+    memosRef.child(uuid.toString()).remove()
   })
 }
 

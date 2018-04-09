@@ -2,42 +2,39 @@
 .previewer.markdown-body(v-html="rendered")
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import UMLEncoder from 'plantuml-encoder'
-import MarkdownIt from 'markdown-it'
+import MarkdownIt, { Token, TokenRender } from 'markdown-it'
 import { sha256 } from '@/utils/hash'
-import throttle from 'throttle-debounce/throttle'
+import { LooseMap2 } from '@/utils/map'
+import { throttle } from 'throttle-debounce'
+import UUID from '@/utils/uuid'
 
-const cacheStore = {
-  container: new Map(),
-  get (category, cacheId) {
-    if (!this.container.has(category)) {
-      return undefined
-    }
-    return this.container.get(category).get(cacheId)
-  },
-  set (category, cacheId, value) {
-    if (!this.container.has(category)) {
-      this.container.set(category, new Map())
-    }
-    this.container.get(category).set(cacheId, value)
-  },
-  del (category, cacheId) {
-    if (!this.container.has(category)) {
-      return
-    }
-    this.container.get(category).delete(cacheId)
-  }
+type Cache = {
+  hash: string
+  decodedUrl: string
+}
+type ReplaceParameter = {
+  fenceIdx: number
+  currentHash: string
+  decodedUrl: string
+  replaceFrom: string
+  replaceTo: string
+}
+type RendererEnv = {
+  cacheStore: LooseMap2<Cache>
+  replaceOrders: Array<ReplaceParameter>
 }
 
 const md = new MarkdownIt()
 
 const originRenderer = md.renderer.rules.fence
-const umlRenderer = (tokens, idx, options, env, slf) => {
+// eslint-disable-next-line space-infix-ops
+const umlRenderer: TokenRender = (tokens, idx, _, { cacheStore, replaceOrders }: RendererEnv, __) => {
   const fenceIdx = tokens
-    .reduce((acc, t, i) => {
-      if (t.type === 'fence') acc.push(parseInt(i))
+    .reduce((acc: number[], t: Token, idx: number) => {
+      if (t.type === 'fence') acc.push(idx)
       return acc
     }, [])
     .findIndex(i => i === idx)
@@ -62,7 +59,7 @@ const umlRenderer = (tokens, idx, options, env, slf) => {
     : `<span data-new-hash="${currentHash}"></span>`
   const replaceTo = `<img src="${decodedUrl}">`
 
-  env.replaceOrders.push({ fenceIdx, currentHash, decodedUrl, replaceFrom, replaceTo })
+  replaceOrders.push({ fenceIdx, currentHash, decodedUrl, replaceFrom, replaceTo })
 
   return replaceFrom
 }
@@ -73,32 +70,54 @@ md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
   return renderer(tokens, idx, options, env, slf)
 }
 
+export interface MarkdownDocument {
+  content: string
+  uuid: UUID
+}
+
 export default Vue.extend({
   name: 'Previewer',
   props: {
     value: {
-      type: String | InputEvent,
+      type: Object as () => MarkdownDocument,
       required: true
     }
   },
   data () {
     return {
       rendered: '',
-      cacheStore
+      // eslint-disable-next-line space-infix-ops
+      cacheStore: new LooseMap2<Cache>()
     }
   },
   watch: {
-    value (value) {
-      let env = { replaceOrders: [] }
-      this.rendered = md.render(value, env)
-      env.replaceOrders.forEach(this.replace, this)
+    value: {
+      handler (after: MarkdownDocument, before?: MarkdownDocument) {
+        const isCreated = !before
+        const isDocunemtChange = before && !before.uuid.isEqual(after.uuid)
+
+        if (isDocunemtChange) {
+          this.cacheStore.delAll()
+        }
+
+        // eslint-disable-next-line space-infix-ops
+        const env: RendererEnv = { cacheStore: this.cacheStore, replaceOrders: [] }
+        this.rendered = md.render(after.content, env)
+
+        const replacer = (isCreated || isDocunemtChange) ? this.replace : this.throttleReplace
+        env.replaceOrders.forEach(replacer, this)
+      },
+      immediate: true
     }
   },
   methods: {
-    replace: throttle(500, function (order) {
-      this.rendered = this.rendered.replace(order.replaceFrom, order.replaceTo)
-      this.cacheStore.set('fence', order.fenceIdx, { hash: order.currentHash, decodedUrl: order.decodedUrl })
-    }, false)
+    throttleReplace: throttle(500, function (this: any, param: ReplaceParameter) {
+      this.replace(param)
+    }, false),
+    replace (param: ReplaceParameter) {
+      this.rendered = this.rendered.replace(param.replaceFrom, param.replaceTo)
+      this.cacheStore.set('fence', param.fenceIdx, { hash: param.currentHash, decodedUrl: param.decodedUrl })
+    }
   }
 })
 </script>

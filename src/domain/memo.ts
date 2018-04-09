@@ -1,20 +1,29 @@
 import MarkdownIt from 'markdown-it'
+import UUID from '@/utils/uuid'
+
 const md = new MarkdownIt()
 
+/**
+ * 型付けされた生のメモ
+ */
 export interface RawMemo {
-  memoUid: string
+  memoUid: string // FIXME
+  uuid: string
   authorUid: string
   content: string
   updatedAt: string
 }
 
-export class Memo {
+/**
+ * メモエンティティ
+ */
+export default class Memo {
   // eslint-disable-next-line no-useless-constructor
   private constructor (
-    readonly memoUid: string,
+    readonly uuid: UUID,
     readonly authorUid: string,
     readonly content: string,
-    readonly updatedAt: string
+    readonly updatedAt: Date
   ) {}
 
   get title (): string {
@@ -30,18 +39,25 @@ export class Memo {
 
   deflate (): RawMemo {
     return {
-      memoUid: this.memoUid,
+      memoUid: this.uuid.toString(), // FIXME
+      uuid: this.uuid.toString(),
       authorUid: this.authorUid,
       content: this.content,
-      updatedAt: this.updatedAt
+      updatedAt: this.updatedAt.toString()
     }
   }
 
-  static inflate ({ memoUid, authorUid, content, updatedAt }: RawMemo): Memo {
-    return new this(memoUid, authorUid, content, updatedAt)
+  deflateForPersist (now: Date): RawMemo {
+    let raw = this.deflate()
+    raw.updatedAt = now.toISOString()
+    return raw
   }
 
-  static empty (memoUid: string, authorUid: string): Memo {
-    return new this(memoUid, authorUid, '', new Date().toISOString())
+  static inflate ({ memoUid, uuid, authorUid, content, updatedAt }: RawMemo): Memo {
+    return new this(UUID.valueOf(uuid || memoUid), authorUid, content, new Date(updatedAt))
+  }
+
+  static empty (uuid: UUID, authorUid: string): Memo {
+    return new this(uuid, authorUid, '', new Date())
   }
 }
