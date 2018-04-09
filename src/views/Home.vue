@@ -1,6 +1,6 @@
 <template lang="pug">
 #root
-  .sidebar(v-if="isSidebarVisible")
+  nav.sidebar(v-if="isSidebarVisible")
     header.header
       h1.title Inbox
       router-link(:to="{ name: 'new' }")
@@ -17,9 +17,7 @@
   .sidebar-handle(@click="isSidebarVisible = !isSidebarVisible", :class="{ inverted: isSidebarVisible }")
     v-icon(:name="isSidebarVisible ? 'chevron-left' : 'chevron-right'")
   main.main
-    //- span {{ user.email }}
-    //-   button(@click="logout") Logout
-    router-view.router-view
+    router-view
 </template>
 
 <script lang="ts">
@@ -83,8 +81,8 @@ html, body
       color: #ffffff
       font-size: 32px
     .icon
-      height: 28px
-      width: 28px
+      height: 24px
+      width: 24px
       color: #b9d0f1
       &:hover
         color: #ffffff
@@ -141,7 +139,5 @@ html, body
   flex: 2
   width: auto
   height: 100%
-.router-view
-  max-height: calc(100% - 38px)
   padding: 1em
 </style>
