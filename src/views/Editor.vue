@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Previewer from '@/components/Previewer.vue'
+import Previewer from '@/components/Previewer/index.vue'
 import { debounce } from 'throttle-debounce'
 import Memo from '@/domain/memo'
 import { difference } from 'lodash'

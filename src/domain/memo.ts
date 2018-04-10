@@ -7,7 +7,6 @@ const md = new MarkdownIt()
  * 型付けされた生のメモ
  */
 export interface RawMemo {
-  memoUid: string // FIXME
   uuid: string
   authorUid: string
   content: string
@@ -39,7 +38,6 @@ export default class Memo {
 
   deflate (): RawMemo {
     return {
-      memoUid: this.uuid.toString(), // FIXME
       uuid: this.uuid.toString(),
       authorUid: this.authorUid,
       content: this.content,
@@ -53,8 +51,8 @@ export default class Memo {
     return raw
   }
 
-  static inflate ({ memoUid, uuid, authorUid, content, updatedAt }: RawMemo): Memo {
-    return new this(UUID.valueOf(uuid || memoUid), authorUid, content, new Date(updatedAt))
+  static inflate ({ uuid, authorUid, content, updatedAt }: RawMemo): Memo {
+    return new this(UUID.valueOf(uuid), authorUid, content, new Date(updatedAt))
   }
 
   static empty (uuid: UUID, authorUid: string): Memo {
