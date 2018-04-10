@@ -1,8 +1,8 @@
-import { Token, Renderer } from 'markdown-it'
-import { sha256 } from '@/utils/hash'
+import { Renderer, Token } from 'markdown-it'
 import UMLEncoder from 'plantuml-encoder'
-import { LazyResource, LazyResourceCacheStore, LazyResourceCache } from './lazy-resource'
+import { sha256 } from '@/utils/hash'
 import { LazyReplaceOrder } from './lazy-replacer'
+import { LazyResource, LazyResourceCache, LazyResourceCacheStore } from './lazy-resource'
 
 export function isUMLFence (token: Token): boolean {
   const lang = token.info.trim().split(/\s+/g)[0]
@@ -65,9 +65,7 @@ export function umlRenderer (
 
   // * 1回目
   // * 2回目以降、かつ、前回から変更あり
-  const replaceFrom = cache
-    ? `<img src="${cache.uri}" data-new-hash="${resource.hash}">`
-    : `<span data-new-hash="${resource.uri}"></span>`
+  const replaceFrom = cache ? `<img src="${cache.uri}">` : `<img data-src="${resource.uri}"></span>`
   const replaceTo = `<img src="${resource.uri}">`
   replaceOrders.push(new LazyReplaceOrder(resource, replaceFrom, replaceTo))
 

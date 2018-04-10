@@ -1,17 +1,13 @@
-<template lang="pug">
-.previewer.markdown-body(v-html="rendered")
-</template>
+import 'github-markdown-css/github-markdown.css'
 
-<script lang="ts">
-import Vue from 'vue'
-import MarkdownIt from 'markdown-it'
-import { LooseMap2 } from '@/utils/map'
-// import { throttle } from 'throttle-debounce'
-import UUID from '@/utils/uuid'
-import { isUMLFence, umlRenderer } from './renderer'
-import { LazyResourceCache } from './lazy-resource'
-import { LazyReplaceOrder, lazyReplacer } from './lazy-replacer'
 import { debounce } from 'lodash'
+import MarkdownIt from 'markdown-it'
+import Vue, { CreateElement } from 'vue'
+import { LooseMap2 } from '@/utils/map'
+import UUID from '@/utils/uuid'
+import { LazyReplaceOrder, lazyReplacer } from './lazy-replacer'
+import { LazyResourceCache } from './lazy-resource'
+import { isUMLFence, umlRenderer } from './renderer'
 
 const md = new MarkdownIt()
 const originRenderer = md.renderer.rules.fence
@@ -36,22 +32,21 @@ export default Vue.extend({
   data () {
     return {
       rendered: '',
-      // eslint-disable-next-line space-infix-ops
       cacheStore: new LooseMap2<LazyResourceCache>()
     }
   },
   watch: {
     value: {
       handler (after: MarkdownDocument, before?: MarkdownDocument) {
-        const isCreated = !before
-        const isDocunemtChange = before && !before.uuid.isEqual(after.uuid)
-        const isContentChange = after.content !== (before ? before.content : '')
+        const isComponentCreated = !before
+        const isDocumentChanged = before && !before.uuid.isEqual(after.uuid)
+        const isContentChanged = after.content !== (before ? before.content : '')
 
-        if (isDocunemtChange) {
+        if (isDocumentChanged) {
           this.cacheStore.delAll()
         }
 
-        if (!isContentChange) {
+        if (!isContentChanged) {
           return
         }
 
@@ -62,27 +57,30 @@ export default Vue.extend({
           return
         }
 
-        const replacer = (isCreated || isDocunemtChange) ? this.replace : this.debounceReplace
+        const replacer = (isComponentCreated || isDocumentChanged) ? this.replace : this.debounceReplace
         replacer(env.replaceOrders)
       },
       immediate: true
     }
   },
   methods: {
+    replace (orders: Array<LazyReplaceOrder>) {
+      orders.forEach(order => {
+        this.rendered = lazyReplacer(this.rendered, order, this.cacheStore)
+      })
+    },
     debounceReplace: debounce(function (this: any, orders: Array<LazyReplaceOrder>) {
       this.replace(orders)
-    }, 1000, { leading: false, trailing: true }),
-    replace (orders: Array<LazyReplaceOrder>) {
-      let result = this.rendered
-      orders.forEach(order => {
-        result = lazyReplacer(result, order, this.cacheStore)
-      })
-      this.rendered = result
-    }
+    }, 1000, { leading: false, trailing: true })
+  },
+  render (createElement: CreateElement) {
+    return createElement('div', {
+      class: [
+        'markdown-body'
+      ],
+      domProps: {
+        innerHTML: this.$data.rendered // workaround
+      }
+    })
   }
 })
-</script>
-
-<style lang="stylus" scoped>
-@import '~github-markdown-css/github-markdown.css'
-</style>

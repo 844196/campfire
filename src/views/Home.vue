@@ -13,7 +13,7 @@
         tag="div"
       )
         .title {{ memo.title }}
-        .updated-at {{ memo.updatedAt }}
+        .updated-at {{ memo.updatedAt.toISOString() }}
   .sidebar-handle(@click="isSidebarVisible = !isSidebarVisible", :class="{ inverted: isSidebarVisible }")
     v-icon(:name="isSidebarVisible ? 'chevron-left' : 'chevron-right'")
   main.main
