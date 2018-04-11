@@ -3,18 +3,16 @@ import 'github-markdown-css/github-markdown.css'
 import { debounce } from 'lodash'
 import MarkdownIt from 'markdown-it'
 import Vue, { CreateElement } from 'vue'
-import { LooseMap2 } from '@/utils/map'
 import UUID from '@/utils/uuid'
-import { LazyReplaceOrder, lazyReplacer } from './lazy-replacer'
-import { LazyResourceCache } from './lazy-resource'
-import { isUMLFence, umlRenderer } from './renderer'
+import markdownitPlantUML, {
+  CachePlantUMLPool,
+  PlantUMLRendererEnv,
+  PlantUMLReplaceOrder
+} from './markdown-it-plantuml'
 
 const md = new MarkdownIt()
-const originRenderer = md.renderer.rules.fence
-md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
-  const renderer = isUMLFence(tokens[idx]) ? umlRenderer : originRenderer
-  return renderer(tokens, idx, options, env, slf)
-}
+const cachePool: CachePlantUMLPool = new Map<string, string>()
+md.use(markdownitPlantUML, cachePool)
 
 export interface MarkdownDocument {
   content: string
@@ -32,7 +30,7 @@ export default Vue.extend({
   data () {
     return {
       rendered: '',
-      cacheStore: new LooseMap2<LazyResourceCache>()
+      cachePool
     }
   },
   watch: {
@@ -43,33 +41,42 @@ export default Vue.extend({
         const isContentChanged = after.content !== (before ? before.content : '')
 
         if (isDocumentChanged) {
-          this.cacheStore.delAll()
+          this.cachePool.clear()
         }
 
         if (!isContentChanged) {
           return
         }
 
-        const env = { cacheStore: this.cacheStore, replaceOrders: [] }
+        const env: PlantUMLRendererEnv = {
+          processedPlantUMLs: new Map(),
+          plantUMLReplaceOrders: []
+        }
         this.rendered = md.render(after.content, env)
 
-        if (env.replaceOrders.length === 0) {
+        this.cachePool.forEach((_, hash) => {
+          if (!env.processedPlantUMLs.has(hash)) {
+            this.cachePool.delete(hash)
+          }
+        })
+
+        if (env.plantUMLReplaceOrders.length === 0) {
           return
         }
 
         const replacer = (isComponentCreated || isDocumentChanged) ? this.replace : this.debounceReplace
-        replacer(env.replaceOrders)
+        replacer(env.plantUMLReplaceOrders)
       },
       immediate: true
     }
   },
   methods: {
-    replace (orders: Array<LazyReplaceOrder>) {
+    replace (orders: Array<PlantUMLReplaceOrder>) {
       orders.forEach(order => {
-        this.rendered = lazyReplacer(this.rendered, order, this.cacheStore)
+        this.rendered = this.rendered.replace(order.replaceFrom, order.replaceTo)
       })
     },
-    debounceReplace: debounce(function (this: any, orders: Array<LazyReplaceOrder>) {
+    debounceReplace: debounce(function (this: any, orders: Array<PlantUMLReplaceOrder>) {
       this.replace(orders)
     }, 1000, { leading: false, trailing: true })
   },
