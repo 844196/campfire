@@ -60,18 +60,22 @@ export default Vue.extend({
 #editor
   height: 100%
   display: flex
-.textarea
-  padding: 0 // reset
+.textarea, .previewer
+  height: 100%
   width: 50%
+  overflow-y: auto
+  background-color: white
+  padding: 1em
+.textarea
+  background-color: #fbfbfb
+  color: #2f2f2f
+  -webkit-font-smoothing antialiased
+  -moz-osx-font-smoothing grayscale
   border: 0
   resize: none
   font-size: 13px
   line-height: 1.5
   font-family: Consolas,Liberation Mono,Menlo,Courier,monospace
-  height: 100%
   &:focus
     outline: none !important
-.previewer
-  overflow-y: auto
-  width: 50%
 </style>

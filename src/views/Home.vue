@@ -1,6 +1,6 @@
 <template lang="pug">
 #root
-  nav.sidebar(v-if="isSidebarVisible")
+  nav.sidebar(v-show="isSidebarVisible")
     header.header
       h1.title Inbox
       router-link(:to="{ name: 'new' }")
@@ -119,10 +119,12 @@ html, body
       color: #5d91df // https://meyerweb.com/eric/tools/color-blend/#0052CC:FFFFFF:10:hex
       font-size: 10px
 .sidebar-handle
+  background-color: #fbfbfb
   display: flex
   justify-content: center
   align-items center
   height: 100%
+  transition: all .3s
   .icon
     width: .8em
     color: #0052cc
@@ -132,6 +134,7 @@ html, body
     .icon
       color: #ffffff
   &:hover
+    transition: all .3s
     background-color: #0043a7
     .icon
       color: #ffffff
@@ -139,5 +142,4 @@ html, body
   flex: 2
   width: auto
   height: 100%
-  padding: 1em
 </style>
