@@ -8,7 +8,8 @@
 import Vue from 'vue'
 import Previewer from '@/components/Previewer'
 import { debounce } from 'throttle-debounce'
-import Memo from '@/domain/memo'
+import Memo from '@/models/memo'
+import { memosHelpers } from '@/store/memos'
 import { difference } from 'lodash'
 
 export default Vue.extend({
@@ -43,14 +44,15 @@ export default Vue.extend({
     )
   },
   methods: {
+    ...memosHelpers.mapActions({
+      'memos/createOrUpdate': 'createOrUpdate'
+    }),
     async onInput () {
       this.cached = this.memo.content
       await this.createOrUpdate()
     },
     createOrUpdate: debounce(750, async function (this: any) {
-      await this.$store.dispatch('memos/createOrUpdate', {
-        memo: this.memo
-      })
+      await this['createOrUpdate']({ memo: this.memo })
     })
   }
 })

@@ -2,7 +2,7 @@ import firebase from '@/firebase'
 import { firebaseAction } from 'vuexfire'
 import { createNamespacedHelpers } from 'vuex'
 import { DefineGetters, DefineMutations, DefineActions } from 'vuex-type-helper'
-import Memo, { RawMemo } from '@/domain/memo'
+import Memo, { RawMemo } from '@/models/memo'
 import UUID from '@/utils/uuid'
 
 const memosRef = firebase.database().ref('memos')

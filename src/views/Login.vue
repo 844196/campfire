@@ -25,10 +25,11 @@ export default Vue.extend({
     }
   },
   methods: {
+    ...authHelpers.mapActions(['login']),
     async onSubmit () {
       this.connecting = true
       try {
-        await authHelpers.mapActions(['login']).login({ email: this.email, password: this.password })
+        await this.login({ email: this.email, password: this.password })
         this.$router.push(this.$route.query.redirect || '/')
       } catch (e) {
         console.error(e)

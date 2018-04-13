@@ -24,6 +24,7 @@
 import Vue from 'vue'
 import { authHelpers } from '@/store/auth'
 import { memosHelpers } from '@/store/memos'
+import UUID from '@/utils/uuid'
 
 export default Vue.extend({
   name: 'Home',
@@ -37,14 +38,19 @@ export default Vue.extend({
     ...memosHelpers.mapGetters({ memos: 'all' })
   },
   created () {
-    this.$store.dispatch('memos/init')
+    this.initMemos(undefined)
   },
   methods: {
-    async deleteMemo (memoUid: string) {
-      await this.$store.dispatch('memos/delete', { memoUid })
+    ...authHelpers.mapActions(['logout']),
+    ...memosHelpers.mapActions({
+      'initMemos': 'init',
+      'deleteMemo': 'delete'
+    }),
+    async deleteMemo (uuid: UUID) {
+      await this.deleteMemo({ uuid })
     },
     async logout () {
-      await this.$store.dispatch('auth/logout')
+      await this['auth/logout'](undefined)
       this.$router.push({ name: 'login' })
     },
     toggleSidebar () {
