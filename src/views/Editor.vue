@@ -1,7 +1,15 @@
 <template lang="pug">
 #editor
-  textarea.textarea(v-model="memo.content", @input="onInput")
-  previewer.previewer(:value="{ content: cached, uuid: memo.uuid }")
+  textarea.textarea(v-model="memo.content", @input="onInput", v-show="layout.textarea")
+  previewer.previewer(:value="{ content: cached, uuid: memo.uuid }", v-show="layout.previewer")
+  nav.menu
+    el-dropdown(@command="handleCommand")
+      span
+        v-icon(name="layout")
+      el-dropdown-menu(slot="dropdown")
+        el-dropdown-item(:command="1") エディタのみ
+        el-dropdown-item(:command="2") プレビューのみ
+        el-dropdown-item(:command="3") 両方
 </template>
 
 <script lang="ts">
@@ -25,6 +33,10 @@ export default Vue.extend({
   },
   data () {
     return {
+      layout: {
+        textarea: true,
+        previewer: true
+      },
       cached: this.memo.content
     }
   },
@@ -45,15 +57,26 @@ export default Vue.extend({
   },
   methods: {
     ...memosHelpers.mapActions({
-      'memos/createOrUpdate': 'createOrUpdate'
+      '_createOrUpdate': 'createOrUpdate'
     }),
     async onInput () {
       this.cached = this.memo.content
       await this.createOrUpdate()
     },
     createOrUpdate: debounce(750, async function (this: any) {
-      await this['createOrUpdate']({ memo: this.memo })
-    })
+      await this._createOrUpdate({ memo: this.memo })
+    }),
+    handleCommand (type: number) {
+      if (type === 1) {
+        this.layout = { textarea: true, previewer: false }
+      }
+      if (type === 2) {
+        this.layout = { textarea: false, previewer: true }
+      }
+      if (type === 3) {
+        this.layout = { textarea: true, previewer: true }
+      }
+    }
   }
 })
 </script>
@@ -68,9 +91,20 @@ export default Vue.extend({
   overflow-y: auto
   background-color: white
   padding: 1em
+.menu
+  height: 100%
+  display: flex
+  padding: .5em
+  flex-direction: column
+  justify-content: flex-end
+  .icon
+    color: #d6d6d6
+    width: 24px
+    transition: all .2s
+    &:hover
+      transition: all .2s
+      color: #a6a6a6
 .textarea
-  background-color: #fbfbfb
-  color: #2f2f2f
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   border: 0
