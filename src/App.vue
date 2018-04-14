@@ -5,7 +5,7 @@ router-view
 <script>
 import Vue from 'vue'
 import ElementUI from 'element-ui'
-import 'reset-css/reset.css'
+import 'normalize.css/normalize.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import FeatherIcons from 'vue-icon'
 

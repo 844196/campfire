@@ -87,6 +87,8 @@ html, body
     align-items: center
     .title
       color: #ffffff
+      font: inherit
+      margin: 0
       font-size: 32px
     .icon
       height: 24px
