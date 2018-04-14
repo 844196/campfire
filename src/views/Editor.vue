@@ -1,8 +1,8 @@
 <template lang="pug">
 #editor
   .column-wrapper
-    textarea.column.textarea(v-model="memo.content", @input="onInput", v-show="layout.textarea")
-    previewer.column(:value="{ content: cached, uuid: memo.uuid }", v-show="layout.previewer")
+    textarea.column.textarea(v-model="memo.content", @input="onInput", v-show="layout.textarea", :style="{ gridColumn: layout.gridColumn}")
+    previewer.column.previewer(:value="{ content: cached, uuid: memo.uuid }", v-show="layout.previewer", :style="{ gridColumn: layout.gridColumn}")
   nav.menu
     el-dropdown(@command="handleCommand")
       span
@@ -36,7 +36,8 @@ export default Vue.extend({
     return {
       layout: {
         textarea: true,
-        previewer: true
+        previewer: true,
+        gridColumn: 'unset'
       },
       cached: this.memo.content
     }
@@ -69,13 +70,13 @@ export default Vue.extend({
     }),
     handleCommand (type: number) {
       if (type === 1) {
-        this.layout = { textarea: true, previewer: false }
+        this.layout = { textarea: true, previewer: false, gridColumn: '1 / span 2' }
       }
       if (type === 2) {
-        this.layout = { textarea: false, previewer: true }
+        this.layout = { textarea: false, previewer: true, gridColumn: '1 / span 2' }
       }
       if (type === 3) {
-        this.layout = { textarea: true, previewer: true }
+        this.layout = { textarea: true, previewer: true, gridColumn: 'unset' }
       }
     }
   }
@@ -89,7 +90,7 @@ export default Vue.extend({
 .menu
   height: 100%
   display: flex
-  padding: .5em
+  padding: 0 .5em .5em 0
   flex-direction: column
   justify-content: flex-end
   .icon
@@ -100,15 +101,27 @@ export default Vue.extend({
       transition: all .2s
       color: #a6a6a6
 .column-wrapper
-  display: flex
-  height: 100%
+  display: grid
+  grid-template-rows: 100%
+  grid-template-columns: 50% 50%
   width: 100%
-  justify-content: center
   .column
-    width: 75%
+    padding: 1em
     height: 100%
     overflow-y: auto
-    padding: 1em
+    &::-webkit-scrollbar
+      width: 12px
+    &::-webkit-scrollbar-thumb
+      background-color: white
+      border-radius: 6px
+      box-shadow: 0px 0px 0px 3px white inset
+    &:hover
+      &::-webkit-scrollbar
+        width: 12px
+      &::-webkit-scrollbar-thumb
+        background-color: #bebebe
+        border-radius: 6px
+        box-shadow: 0px 0px 0px 3px white inset
 .textarea
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
@@ -119,4 +132,7 @@ export default Vue.extend({
   font-family: Consolas,Liberation Mono,Menlo,Courier,monospace
   &:focus
     outline: none !important
+.previewer
+  font-size: 14px
+  background-color: unset
 </style>

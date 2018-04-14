@@ -8,9 +8,17 @@ import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import FeatherIcons from 'vue-icon'
+import Timeago from 'vue-timeago'
 
 Vue.use(ElementUI)
 Vue.use(FeatherIcons, 'v-icon')
+Vue.use(Timeago, {
+  name: 'timeago',
+  locale: 'ja-JP',
+  locales: {
+    'ja-JP': require('vue-timeago/locales/ja-JP.json')
+  }
+})
 
 export default Vue.extend({
   name: 'App'

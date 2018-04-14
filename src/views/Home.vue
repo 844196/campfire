@@ -12,8 +12,15 @@
         :to="{ name: 'edit', params: { memoUUID: memo.uuid.toString() } }",
         tag="div"
       )
-        .title {{ memo.title }}
-        .updated-at {{ memo.updatedAt.toISOString() }}
+        div.meta-info
+          .title {{ memo.title }}
+          timeago.updated-at(:since="memo.updatedAt", :auto-update="60")
+        nav.more-menu
+          el-dropdown(@command="deleteMemo")
+            span
+              v-icon(name="more-vertical")
+            el-dropdown-menu(slot="dropdown")
+              el-dropdown-item(:command="memo.uuid") 削除
   .sidebar-handle(@click="isSidebarVisible = !isSidebarVisible", :class="{ inverted: isSidebarVisible }")
     v-icon(:name="isSidebarVisible ? 'chevron-left' : 'chevron-right'")
   main.main
@@ -114,22 +121,36 @@ html, body
   .memolist-item
     padding: 11px
     margin: 7px
+    display: flex
+    justify-content: space-between
+    align-items: center
     &:hover, &.router-link-active
       background-color: #0049b0
       border-radius: .2em
-      .title
-        color: #ffffff
-      .updated-at
+      .meta-info
+        .title
+          color: #ffffff
+        .updated-at
+          color: #74a1e3
+    &.router-link-active
+      .more-menu
+        display: block
+      .more-menu .icon
         color: #74a1e3
-    .title
-      color: #8bb0e8
-      font-size: 16px
-      margin-bottom: .3em
-    .updated-at
-      color: #5d91df // https://meyerweb.com/eric/tools/color-blend/#0052CC:FFFFFF:10:hex
-      font-size: 10px
+    .meta-info
+      overflow: hidden
+      .title
+        overflow: hidden
+        white-space: nowrap
+        text-overflow: ellipsis
+        color: #8bb0e8
+        font-size: 16px
+      .updated-at
+        color: #5d91df // https://meyerweb.com/eric/tools/color-blend/#0052CC:FFFFFF:10:hex
+        font-size: 11px
+    .more-menu
+      display: none
 .sidebar-handle
-  background-color: #fbfbfb
   display: flex
   justify-content: center
   align-items center
