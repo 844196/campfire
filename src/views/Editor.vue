@@ -1,7 +1,8 @@
 <template lang="pug">
 #editor
-  textarea.textarea(v-model="memo.content", @input="onInput", v-show="layout.textarea")
-  previewer.previewer(:value="{ content: cached, uuid: memo.uuid }", v-show="layout.previewer")
+  .column-wrapper
+    textarea.column.textarea(v-model="memo.content", @input="onInput", v-show="layout.textarea")
+    previewer.column(:value="{ content: cached, uuid: memo.uuid }", v-show="layout.previewer")
   nav.menu
     el-dropdown(@command="handleCommand")
       span
@@ -85,12 +86,6 @@ export default Vue.extend({
 #editor
   height: 100%
   display: flex
-.textarea, .previewer
-  height: 100%
-  width: 50%
-  overflow-y: auto
-  background-color: white
-  padding: 1em
 .menu
   height: 100%
   display: flex
@@ -104,6 +99,16 @@ export default Vue.extend({
     &:hover
       transition: all .2s
       color: #a6a6a6
+.column-wrapper
+  display: flex
+  height: 100%
+  width: 100%
+  justify-content: center
+  .column
+    width: 75%
+    height: 100%
+    overflow-y: auto
+    padding: 1em
 .textarea
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
