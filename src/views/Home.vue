@@ -41,16 +41,18 @@ export default Vue.extend({
     this.initMemos(undefined)
   },
   methods: {
-    ...authHelpers.mapActions(['logout']),
     ...memosHelpers.mapActions({
       'initMemos': 'init',
-      'deleteMemo': 'delete'
+      '_deleteMemo': 'delete'
+    }),
+    ...authHelpers.mapActions({
+      '_logout': 'logout'
     }),
     async deleteMemo (uuid: UUID) {
-      await this.deleteMemo({ uuid })
+      await this._deleteMemo({ uuid })
     },
     async logout () {
-      await this['auth/logout'](undefined)
+      await this._logout(undefined)
       this.$router.push({ name: 'login' })
     },
     toggleSidebar () {
