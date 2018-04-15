@@ -20,7 +20,11 @@ export interface Getters {
 }
 const getters: DefineGetters<Getters, State> = {
   all (state) {
-    return state.raws.map(raw => Memo.inflate(raw))
+    return state.raws.map(raw => Memo.inflate(raw)).sort((a, b) => {
+      if (a.updatedAt < b.updatedAt) return 1
+      if (a.updatedAt > b.updatedAt) return -1
+      return 0
+    })
   },
   findOrEmpty (_, getters) {
     return (uuid, authorUid) => getters.all.find(m => m.uuid.isEqual(uuid)) || Memo.empty(uuid, authorUid)
