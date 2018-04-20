@@ -38,10 +38,11 @@ export interface Actions {
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
   init ({ commit }) {
-    return Promise.resolve(() => {
+    return new Promise(resolve => {
       let unsubFunc = firebase.auth().onAuthStateChanged(user => {
         commit('changeUser', user)
         unsubFunc()
+        resolve()
       })
     })
   },
