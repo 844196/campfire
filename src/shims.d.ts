@@ -16,6 +16,51 @@ declare module 'plantuml-encoder' {
   function encode (content: string): string
 }
 
+declare module 'vue-routisan' {
+  import { RouteConfig, NavigationGuard, RedirectOption } from 'vue-router'
+
+  type Component = RouteConfig['component']
+  type Guard = NavigationGuard | NavigationGuard[]
+  type RouteOptions = Pick<RouteConfig & { prefix?: string },
+    | 'name'
+    | 'components'
+    | 'redirect'
+    | 'props'
+    | 'alias'
+    | 'children'
+    | 'beforeEnter'
+    | 'meta'
+    | 'caseSensitive'
+    | 'pathToRegexpOptions'
+    | 'prefix'
+  >
+  type GroupOptions = {
+    prefix?: string
+    beforeEnter?: Guard
+  }
+  // eslint-disable-next-line space-infix-ops
+  type Resolver<T = any> = (param: T) => Component
+
+  class Route {
+    options (options: RouteOptions): Route
+    name (name: string): Route
+    guard (guard: Guard): Route
+    children (routes: () => void): Route
+  }
+
+  class Routisan {
+    setViewResolver<T = any> (resolver: Resolver<T>): void
+    view<T = any> (path: string, component: any): Route
+    redirect (path: string, redirect: RedirectOption): Route
+    group (options: GroupOptions, routes: () => void): void
+    all (): RouteConfig[]
+  }
+
+  declare var r: Routisan
+
+  export = r
+}
+
 // FIXIME コールバックの型が正しくない
 type BindOptions = {
   cancelCallback?: () => void
