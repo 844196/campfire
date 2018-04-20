@@ -45,11 +45,11 @@ export default Vue.extend({
     ...memosHelpers.mapGetters({ memos: 'all' })
   },
   created () {
-    this.initMemos(undefined)
+    this._initMemos(undefined)
   },
   methods: {
     ...memosHelpers.mapActions({
-      'initMemos': 'init',
+      '_initMemos': 'init',
       '_deleteMemo': 'delete'
     }),
     ...authHelpers.mapActions({
