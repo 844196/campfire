@@ -1,16 +1,8 @@
-import { NavigationGuard, RouteConfig } from 'vue-router'
+import { RouteConfig } from 'vue-router'
 import store from '@/store'
 import UUID from '@/utils/uuid'
 
 const view = (name: string) => require(`@/views/${name}.vue`).default
-
-const authed: NavigationGuard = (to, _, next) => {
-  if (store.getters['auth/authed']) {
-    next()
-  } else {
-    next({ name: 'login', query: { redirect: to.fullPath } })
-  }
-}
 
 const routes: RouteConfig[] = [
   {
@@ -22,7 +14,13 @@ const routes: RouteConfig[] = [
     path: '/',
     name: 'home',
     component: view('Home'),
-    beforeEnter: authed,
+    beforeEnter (to, _, next) {
+      if (store.getters['auth/authed']) {
+        next()
+      } else {
+        next({ name: 'login', query: { redirect: to.fullPath } })
+      }
+    },
     children: [
       {
         path: 'new',
