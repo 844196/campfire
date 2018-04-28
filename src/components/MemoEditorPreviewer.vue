@@ -1,14 +1,19 @@
-import 'github-markdown-css/github-markdown.css'
+<template lang="pug">
+.markdown-body(v-html="rendered")
+</template>
 
+<script lang="ts">
+import 'github-markdown-css/github-markdown.css'
 import { debounce } from 'lodash'
 import MarkdownIt from 'markdown-it'
-import Vue, { CreateElement } from 'vue'
+import Vue from 'vue'
 import UUID from '@/utils/uuid'
+// eslint-disable-next-line space-infix-ops
 import markdownitPlantUML, {
   CachePlantUMLPool,
   PlantUMLRendererEnv,
   PlantUMLReplaceOrder
-} from './markdown-it-plantuml'
+} from '@/utils/markdown-it-plantuml'
 
 const md = new MarkdownIt()
 const cachePool: CachePlantUMLPool = new Map<string, string>()
@@ -20,7 +25,7 @@ export interface MarkdownDocument {
 }
 
 export default Vue.extend({
-  name: 'Previewer',
+  name: 'MemoEditorPreviewer',
   props: {
     value: {
       type: Object as () => MarkdownDocument,
@@ -48,6 +53,7 @@ export default Vue.extend({
           return
         }
 
+        // eslint-disable-next-line space-infix-ops
         const env: PlantUMLRendererEnv = {
           processedPlantUMLs: new Map(),
           plantUMLReplaceOrders: []
@@ -79,15 +85,6 @@ export default Vue.extend({
     debounceReplace: debounce(function (this: any, orders: Array<PlantUMLReplaceOrder>) {
       this.replace(orders)
     }, 1000, { leading: false, trailing: true })
-  },
-  render (createElement: CreateElement) {
-    return createElement('div', {
-      class: [
-        'markdown-body'
-      ],
-      domProps: {
-        innerHTML: this.$data.rendered // workaround
-      }
-    })
   }
 })
+</script>

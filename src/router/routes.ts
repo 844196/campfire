@@ -12,8 +12,8 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/',
-    name: 'home',
-    component: view('Home'),
+    name: 'main',
+    component: view('Main'),
     beforeEnter (to, _, next) {
       if (store.getters['auth/authed']) {
         next()
@@ -23,17 +23,17 @@ const routes: RouteConfig[] = [
     },
     children: [
       {
-        path: 'new',
+        path: 'memos/new',
         name: 'new',
         redirect: () => ({
-          name: 'edit',
+          name: 'memo',
           params: { memoUUID: UUID.generate().toString() }
         })
       },
       {
-        path: 'edit/:memoUUID',
-        name: 'edit',
-        component: view('Editor'),
+        path: 'memos/:memoUUID',
+        name: 'memo',
+        component: view('Memos'),
         props: ({ params }) => ({
           memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid)
         })

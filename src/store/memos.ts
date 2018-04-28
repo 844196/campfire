@@ -16,7 +16,7 @@ const state: State = {
 
 export interface Getters {
   all: Array<Memo>
-  findOrEmpty: (uuid: UUID, authorUid: string) => Memo | null
+  findOrEmpty: (uuid: UUID, authorUid: string) => Memo
 }
 const getters: DefineGetters<Getters, State> = {
   all (state) {
