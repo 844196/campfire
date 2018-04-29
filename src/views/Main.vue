@@ -42,5 +42,6 @@ html, body
         border-radius: 50%
 
   #main
+    height: 100%
     flex: 1
 </style>

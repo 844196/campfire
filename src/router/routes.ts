@@ -2,18 +2,19 @@ import { RouteConfig } from 'vue-router'
 import store from '@/store'
 import UUID from '@/utils/uuid'
 
-const view = (name: string) => require(`@/views/${name}.vue`).default
+const v = (name: string) => require(`@/views/${name}.vue`).default
+const c = (name: string) => require(`@/components/${name}.vue`).default
 
 const routes: RouteConfig[] = [
   {
     path: '/login',
     name: 'login',
-    component: view('Login')
+    component: v('Login')
   },
   {
     path: '/',
     name: 'main',
-    component: view('Main'),
+    component: v('Main'),
     beforeEnter (to, _, next) {
       if (store.getters['auth/authed']) {
         next()
@@ -23,20 +24,36 @@ const routes: RouteConfig[] = [
     },
     children: [
       {
-        path: 'memos/new',
-        name: 'new',
-        redirect: () => ({
-          name: 'memo',
-          params: { memoUUID: UUID.generate().toString() }
-        })
+        path: '',
+        redirect: { name: 'memoHome' }
       },
       {
-        path: 'memos/:memoUUID',
-        name: 'memo',
-        component: view('Memos'),
-        props: ({ params }) => ({
-          memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid)
-        })
+        path: 'memos',
+        name: 'memos',
+        component: v('Memos'),
+        children: [
+          {
+            path: '',
+            name: 'memoHome',
+            component: c('MemoEmptyState')
+          },
+          {
+            path: 'new',
+            name: 'new',
+            redirect: () => ({
+              name: 'memo',
+              params: { memoUUID: UUID.generate().toString() }
+            })
+          },
+          {
+            path: ':memoUUID',
+            name: 'memo',
+            component: c('MemoEditor'),
+            props: ({ params }) => ({
+              memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid)
+            })
+          }
+        ]
       }
     ]
   }

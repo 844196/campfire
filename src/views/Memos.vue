@@ -1,27 +1,18 @@
 <template lang="pug">
 #memos
   memo-list.memo-list(:memos="memos")
-  memo-editor.memo-editor(:memo="memo")
+  router-view.router-view
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Memo from '@/models/memo'
-import MemoEditor from '@/components/MemoEditor.vue'
 import MemoList from '@/components/MemoList.vue'
 import { memosHelpers } from '@/store/memos'
 
 export default Vue.extend({
   name: 'Memos',
   components: {
-    MemoList,
-    MemoEditor
-  },
-  props: {
-    memo: {
-      type: Object as () => Memo,
-      required: true
-    }
+    MemoList
   },
   computed: {
     ...memosHelpers.mapGetters({ memos: 'all' })
@@ -44,7 +35,7 @@ export default Vue.extend({
     height: 100%
     width: 18rem
 
-  .memo-editor
+  .router-view
     height: 100%
     flex: 1
 </style>
