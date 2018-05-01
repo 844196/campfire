@@ -12,6 +12,10 @@ const routes: RouteConfig[] = [
     component: v('Login')
   },
   {
+    path: '/tree',
+    component: v('Tree')
+  },
+  {
     path: '/',
     name: 'main',
     component: v('Main'),
