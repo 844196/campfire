@@ -3,6 +3,10 @@ declare module '*.vue' {
   export default Vue
 }
 
+declare module 'vue/dist/vue.esm' {
+  export = Vue
+}
+
 declare module 'is-uuid' {
   function v1 (str: string): boolean
   function v2 (str: string): boolean
