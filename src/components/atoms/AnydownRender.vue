@@ -4,6 +4,9 @@ import { VueConstructor } from 'vue/types/vue'
 import { ComponentOptions } from 'vue/types/options'
 import VueWithCompiler from 'vue/dist/vue.esm'
 import MarkdownIt from 'markdown-it'
+import MarkdownItSrc, { RenderEnv as MarkdownRenderEnv } from '@/utils/markdown-it-src'
+
+export { MarkdownRenderEnv }
 
 export type AnydownComponent = {
   ComponentName: string
@@ -19,6 +22,8 @@ export type InstallerParams = {
 // eslint-disable-next-line
 export function Install (params: InstallerParams = {}): VueConstructor {
   const md = params.md || new MarkdownIt()
+
+  md.use(MarkdownItSrc)
 
   // eslint-disable-next-line
   let components: ComponentOptions<Vue>['components'] = {}
@@ -71,7 +76,5 @@ export function Install (params: InstallerParams = {}): VueConstructor {
   })
 }
 
-// dummy
-// reason: SFC は default でコンポーネントコンストラクタを返さないとWarningになるため
-export default Vue.extend({})
+export default Install()
 </script>

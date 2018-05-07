@@ -4,24 +4,17 @@ input(:value="value", @input="onInput($event.target.value)")
 
 <script lang="ts">
 import Vue from 'vue'
-import MarkdownIt from 'markdown-it'
+import customFence from '@/utils/markdown-it-custom-fence'
 
 export const ComponentName = 'test'
 
-export function MarkdownItPlugin (md: MarkdownIt.MarkdownIt) {
-  const originRenderer = md.renderer.rules.fence
-
-  md.renderer.rules.fence = function (tokens, index, options, env, self) {
-    const token = tokens[index]
-
-    const lang = token.info.trim().split(/\s+/g)[0]
-    if (lang !== 'test') {
-      return originRenderer(tokens, index, options, env, self)
-    }
-
-    return `<${ComponentName} :value='${JSON.stringify(token.content)}' @input="onInput"/>`
+export const MarkdownItPlugin = customFence({
+  lang: ['foo', 'bar'],
+  render: (tokens, idx) => {
+    console.log(tokens[idx])
+    return `<${ComponentName} :value='${JSON.stringify(tokens[idx].content)}' @input="onInput" />`
   }
-}
+})
 
 export const Component = Vue.extend({
   name: ComponentName,

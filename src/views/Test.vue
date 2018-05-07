@@ -1,27 +1,21 @@
 <template lang="pug">
 div
   textarea(v-model="value")
-  render(:value="value")
+  anydown(v-model="value")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import * as Render from '@/components/atoms/AnydownRender.vue'
-import * as UMLComponent from '@/components/atoms/AnydownPlantUML.vue'
-import * as TestComponent from '@/components/atoms/AnydownTest.vue'
-
-const render = Render.Install({
-  components: [UMLComponent, TestComponent]
-})
+import Anydown from '@/components/molecules/Anydown.vue'
 
 export default Vue.extend({
   name: 'Test',
   components: {
-    render
+    Anydown
   },
   data () {
     return {
-      value: '* foo\n* bar\n'
+      value: ''
     }
   }
 })
