@@ -1,5 +1,5 @@
 <template lang="pug">
-component(:is="tag", :src="src")
+img(:src="src")
 </template>
 
 <script lang="ts">
@@ -17,18 +17,16 @@ export default Vue.extend({
   },
   data () {
     return {
-      tag: 'span',
       src: ''
     }
   },
+  created () {
+    this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
+  },
   watch: {
-    value: {
-      handler: debounce(function (this: any) {
-        this.tag = 'img'
-        this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
-      }, 1000, { leading: false, trailing: true }),
-      immediate: true
-    }
+    value: debounce(function (this: any) {
+      this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
+    }, 1000, { leading: false, trailing: true })
   }
 })
 </script>

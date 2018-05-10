@@ -52,7 +52,6 @@ export default Vue.extend({
       '_createOrUpdate': 'createOrUpdate'
     }),
     createOrUpdate: debounce(async function (this: any) {
-      console.log(123)
       await this._createOrUpdate({ memo: this.memo })
     }, 750, { leading: false, trailing: true })
   }

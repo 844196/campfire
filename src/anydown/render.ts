@@ -48,8 +48,7 @@ export default function install (rules?: Array<AnydownRule>): VueConstructor {
           const compiled = VueWithCompiler.compile(template)
           this.templateRender = compiled.render
 
-          // @ts-ignore
-          // reason: 非公開プロパティを直接操作
+          // @ts-ignore: 非公開プロパティ
           this._staticTrees = []
 
           this.$options.staticRenderFns = []
@@ -58,6 +57,10 @@ export default function install (rules?: Array<AnydownRule>): VueConstructor {
           }
         },
         immediate: true
+      },
+      '$route': function () {
+        // @ts-ignore: 非公開プロパティ
+        this._vnode = null
       }
     },
     render (h): VNode {

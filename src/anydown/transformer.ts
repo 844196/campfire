@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it'
+import { escape } from 'lodash'
 
 interface Options {
   lang: string
@@ -16,8 +17,8 @@ export default function (md: MarkdownIt.MarkdownIt, { lang, eleName }: Options) 
     }
 
     return `<${eleName}
-      :value='${JSON.stringify(token.content.trim())}'
-      @input='onInput($event.trim(), ${JSON.stringify(token.map)})'
+      :value='${escape(JSON.stringify(token.content.trim()))}'
+      @input='onInput($event.trim(), ${escape(JSON.stringify(token.map))})'
     />`
   }
 }
