@@ -12,10 +12,6 @@ const routes: RouteConfig[] = [
     component: v('Login')
   },
   {
-    path: '/test',
-    component: v('Test')
-  },
-  {
     path: '/',
     name: 'main',
     component: v('Main'),
@@ -39,7 +35,7 @@ const routes: RouteConfig[] = [
           {
             path: '',
             name: 'memoHome',
-            component: c('MemoEmptyState')
+            component: c('atoms/MemoEmptyState')
           },
           {
             path: 'new',

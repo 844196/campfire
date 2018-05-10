@@ -1,35 +1,28 @@
-<script lang="ts">
 import Vue, { VNode } from 'vue'
 import { VueConstructor } from 'vue/types/vue'
 import { ComponentOptions } from 'vue/types/options'
 import VueWithCompiler from 'vue/dist/vue.esm'
+import transformer from './transformer'
 import MarkdownIt from 'markdown-it'
-import MarkdownItSrc, { RenderEnv as MarkdownRenderEnv } from '@/utils/markdown-it-src'
+import reflect from './reflector'
 
-export { MarkdownRenderEnv }
-
-export type AnydownComponent = {
-  ComponentName: string
-  Component: any
-  MarkdownItPlugin: Function
+export type AnydownRule = {
+  lang: string
+  component: any
 }
 
-export type InstallerParams = {
-  md?: MarkdownIt.MarkdownIt
-  components?: Array<AnydownComponent>
-}
+export default function install (rules?: Array<AnydownRule>): VueConstructor {
+  const md = new MarkdownIt()
 
-// eslint-disable-next-line
-export function Install (params: InstallerParams = {}): VueConstructor {
-  const md = params.md || new MarkdownIt()
-
-  md.use(MarkdownItSrc)
-
-  // eslint-disable-next-line
   let components: ComponentOptions<Vue>['components'] = {}
-  for (const c of (params.components || [])) {
-    components[c.ComponentName] = c.Component
-    md.use(c.MarkdownItPlugin)
+  for (const r of (rules || [])) {
+    const C = Vue.extend(r.component)
+    const c = new C({ propsData: { value: '' } })
+    const cName = c.$options.name!
+    c.$destroy()
+
+    components[cName] = r.component
+    md.use(transformer, { lang: r.lang, eleName: cName })
   }
 
   return Vue.extend({
@@ -49,7 +42,9 @@ export function Install (params: InstallerParams = {}): VueConstructor {
     watch: {
       value: {
         handler () {
-          const template = `<div>${md.render(this.value)}</div>`
+          const html = md.render(this.value)
+          const template = `<div>${html}</div>`
+
           const compiled = VueWithCompiler.compile(template)
           this.templateRender = compiled.render
 
@@ -69,12 +64,9 @@ export function Install (params: InstallerParams = {}): VueConstructor {
       return this.templateRender ? this.templateRender() : h('div')
     },
     methods: {
-      onInput (v: any) {
-        console.log(v)
+      onInput (value: string, position: [number, number]) {
+        this.$emit('input', reflect(this.value, value, position))
       }
     }
   })
 }
-
-export default Install()
-</script>

@@ -1,15 +1,15 @@
 <template lang="pug">
 .memo-editor
   .column-wrapper
-    memo-editor-textarea.column.textarea(v-model="memo.content", @input="onInput")
-    memo-editor-previewer.column.previewer(:value="{ content: cached, uuid: memo.uuid }")
+    memo-editor-textarea.column.textarea(v-model="cachedContent")
+    anydown.column.previewer(v-model="cachedContent")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import MemoEditorPreviewer from '@/components/MemoEditorPreviewer.vue'
-import MemoEditorTextarea from '@/components/MemoEditorTextarea.vue'
-import { debounce } from 'throttle-debounce'
+import Anydown from '@/components/molecules/Anydown.vue'
+import MemoEditorTextarea from '@/components/atoms/MemoEditorTextarea.vue'
+import { debounce } from 'lodash'
 import Memo from '@/models/memo'
 import { memosHelpers } from '@/store/memos'
 
@@ -17,7 +17,7 @@ export default Vue.extend({
   name: 'MemoEditor',
   components: {
     MemoEditorTextarea,
-    MemoEditorPreviewer
+    Anydown
   },
   props: {
     memo: {
@@ -30,22 +30,31 @@ export default Vue.extend({
       cached: this.memo.content
     }
   },
+  computed: {
+    cachedContent: {
+      get (): string {
+        return this.cached
+      },
+      async set (value: string) {
+        this.cached = value
+        this.memo.content = value
+        await this.createOrUpdate()
+      }
+    }
+  },
   watch: {
-    'memo' (nv) {
-      this.cached = nv.content
+    memo () {
+      this.cached = this.memo.content
     }
   },
   methods: {
     ...memosHelpers.mapActions({
       '_createOrUpdate': 'createOrUpdate'
     }),
-    onInput () {
-      this.cached = this.memo.content
-      this.createOrUpdate()
-    },
-    createOrUpdate: debounce(750, async function (this: any) {
+    createOrUpdate: debounce(async function (this: any) {
+      console.log(123)
       await this._createOrUpdate({ memo: this.memo })
-    })
+    }, 750, { leading: false, trailing: true })
   }
 })
 </script>

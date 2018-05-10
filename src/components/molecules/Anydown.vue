@@ -1,19 +1,21 @@
 <template lang="pug">
-render(v-model="value", @input="onInput")
+render.markdown-body(:value="value", @input="onInput")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { Install } from '@/components/atoms/AnydownRender.vue'
-import * as UMLComponent from '@/components/atoms/AnydownPlantUML.vue'
-import * as TestComponent from '@/components/atoms/AnydownTest.vue'
+import install from '@/anydown'
 
-const render = Install({
-  components: [
-    UMLComponent,
-    TestComponent
-  ]
-})
+const render = install([
+  {
+    lang: 'uml',
+    component: require('@/components/atoms/AnydownPlantUML.vue').default
+  },
+  {
+    lang: 'test',
+    component: require('@/components/atoms/AnydownTest.vue').default
+  }
+])
 
 export default Vue.extend({
   name: 'Anydown',
@@ -27,8 +29,11 @@ export default Vue.extend({
     }
   },
   methods: {
-    onInput () {
+    onInput (value: string) {
+      this.$emit('input', value)
     }
   }
 })
 </script>
+
+<style src="github-markdown-css/github-markdown.css">

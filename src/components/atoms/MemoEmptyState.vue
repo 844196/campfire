@@ -27,6 +27,7 @@ export default Vue.extend({
   .state-icon
     width: 9rem
     color: #0052cc
+    stroke-width: 1
 
   .state-label
     font-size: 1.7em

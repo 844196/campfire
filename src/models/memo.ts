@@ -19,10 +19,10 @@ export interface RawMemo {
 export default class Memo {
   // eslint-disable-next-line no-useless-constructor
   private constructor (
-    readonly uuid: UUID,
-    readonly authorUid: string,
-    readonly content: string,
-    readonly updatedAt: Date
+    public uuid: UUID,
+    public authorUid: string,
+    public content: string,
+    public updatedAt: Date
   ) {}
 
   get title (): string {
