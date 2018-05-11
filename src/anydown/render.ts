@@ -29,6 +29,10 @@ export default function install (rules?: Array<AnydownRule>): VueConstructor {
     name: 'AnydownRender',
     components,
     props: {
+      uuid: {
+        type: String,
+        required: true
+      },
       value: {
         type: String,
         required: true
@@ -58,7 +62,7 @@ export default function install (rules?: Array<AnydownRule>): VueConstructor {
         },
         immediate: true
       },
-      '$route': function () {
+      uuid () {
         // @ts-ignore: 非公開プロパティ
         this._vnode = null
       }

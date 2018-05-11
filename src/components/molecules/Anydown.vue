@@ -1,10 +1,11 @@
 <template lang="pug">
-render.markdown-body(:value="value", @input="onInput")
+render.markdown-body(:uuid="uuid.toString()", :value="value", @input="onInput")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import install from '@/anydown'
+import UUID from '@/utils/uuid'
 
 const render = install([
   {
@@ -23,6 +24,10 @@ export default Vue.extend({
     render
   },
   props: {
+    uuid: {
+      type: Object as () => UUID,
+      required: true
+    },
     value: {
       type: String,
       required: true

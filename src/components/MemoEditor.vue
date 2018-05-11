@@ -2,7 +2,7 @@
 .memo-editor
   .column-wrapper
     memo-editor-textarea.column.textarea(v-model="cachedContent")
-    anydown.column.previewer(v-model="cachedContent")
+    anydown.column.previewer(:uuid="memo.uuid", v-model="cachedContent")
 </template>
 
 <script lang="ts">
