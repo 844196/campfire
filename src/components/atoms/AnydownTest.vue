@@ -1,5 +1,5 @@
 <template lang="pug">
-textarea(:value="value", @input="onInput($event.target.value)")
+textarea(:value="value", @input="$emit('input', $event.target.value)")
 </template>
 
 <script lang="ts">
@@ -11,11 +11,6 @@ export default Vue.extend({
     value: {
       type: String,
       required: true
-    }
-  },
-  methods: {
-    onInput (value: string) {
-      this.$emit('input', value)
     }
   }
 })
