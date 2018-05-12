@@ -2,8 +2,9 @@ import Vue, { VNode } from 'vue'
 import { VueConstructor } from 'vue/types/vue'
 import { ComponentOptions } from 'vue/types/options'
 import VueWithCompiler from 'vue/dist/vue.esm'
-import transformer from './transformer'
+import { v4 as isUUID } from 'is-uuid'
 import MarkdownIt from 'markdown-it'
+import transformer from './transformer'
 import reflect from './reflector'
 
 export type AnydownRule = {
@@ -31,7 +32,8 @@ export default function install (rules?: Array<AnydownRule>): VueConstructor {
     props: {
       uuid: {
         type: String,
-        required: true
+        required: true,
+        validator: (given: string) => isUUID(given)
       },
       value: {
         type: String,
