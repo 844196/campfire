@@ -6,8 +6,17 @@ render.markdown-body(:uuid="uuid.toString()", :value="value", @input="onInput")
 import Vue from 'vue'
 import install from '@/anydown'
 import UUID from '@/utils/uuid'
+import MarkdownIt from 'markdown-it'
+import linkAttributes from 'markdown-it-link-attributes'
 
-const render = install([
+const md = new MarkdownIt()
+  .use(linkAttributes, {
+    attrs: {
+      target: '_blank'
+    }
+  })
+
+const render = install(md, [
   {
     lang: 'uml',
     component: require('@/components/atoms/AnydownPlantUML.vue').default

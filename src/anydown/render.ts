@@ -12,9 +12,7 @@ export type AnydownRule = {
   component: any
 }
 
-export default function install (rules?: Array<AnydownRule>): VueConstructor {
-  const md = new MarkdownIt()
-
+export default function install (md: MarkdownIt.MarkdownIt, rules?: Array<AnydownRule>): VueConstructor {
   let components: ComponentOptions<Vue>['components'] = {}
   for (const r of (rules || [])) {
     const C = Vue.extend(r.component)

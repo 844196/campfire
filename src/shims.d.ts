@@ -301,3 +301,4 @@ declare module 'remark-parse'
 declare module 'remark-html'
 
 declare module 'vue-codemirror-lite'
+declare module 'markdown-it-link-attributes'
