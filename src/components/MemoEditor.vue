@@ -27,16 +27,16 @@ export default Vue.extend({
   },
   data () {
     return {
-      cached: this.memo.content
+      cached: this.memo
     }
   },
   computed: {
     cachedContent: {
       get (): string {
-        return this.cached
+        return this.cached.content
       },
       async set (value: string) {
-        this.cached = value
+        this.cached.content = value
         this.memo.content = value
         await this.createOrUpdate()
       }
@@ -44,7 +44,7 @@ export default Vue.extend({
   },
   watch: {
     memo () {
-      this.cached = this.memo.content
+      this.cached = this.memo
     }
   },
   methods: {
