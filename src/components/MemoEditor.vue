@@ -3,12 +3,14 @@
   .column-wrapper
     memo-editor-textarea.column.textarea(v-model="cachedContent")
     anydown.column.previewer(:uuid="memo.uuid", v-model="cachedContent")
+  memo-editor-sidebar(:storeState="storeState")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Anydown from '@/components/molecules/Anydown.vue'
 import MemoEditorTextarea from '@/components/atoms/MemoEditorTextarea.vue'
+import MemoEditorSidebar, { StoreState } from '@/components/atoms/MemoEditorSidebar.vue'
 import { debounce } from 'lodash'
 import Memo from '@/models/memo'
 import { memosHelpers } from '@/store/memos'
@@ -17,6 +19,7 @@ export default Vue.extend({
   name: 'MemoEditor',
   components: {
     MemoEditorTextarea,
+    MemoEditorSidebar,
     Anydown
   },
   props: {
@@ -27,7 +30,8 @@ export default Vue.extend({
   },
   data () {
     return {
-      cached: this.memo
+      cached: this.memo,
+      storeState: StoreState.DOING
     }
   },
   computed: {
@@ -38,6 +42,7 @@ export default Vue.extend({
       async set (value: string) {
         this.cached.content = value
         this.memo.content = value
+        this.storeState = StoreState.DOING
         await this.createOrUpdate()
       }
     }
@@ -45,6 +50,7 @@ export default Vue.extend({
   watch: {
     memo () {
       this.cached = this.memo
+      this.storeState = StoreState.COMPLETED
     }
   },
   methods: {
@@ -59,6 +65,9 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
+.memo-editor
+  display: flex
+
 .column-wrapper
   display: grid
   grid-template-rows: 100%
