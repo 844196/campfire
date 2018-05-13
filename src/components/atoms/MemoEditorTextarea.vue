@@ -61,6 +61,7 @@ export default Vue.extend({
     .cm-link
       color: #005cc5
     .cm-formatting-link.cm-link, .cm-formatting-image.cm-link
+      color: unset
       text-decoration: none
     .cm-formatting-list
       color: #e36209
