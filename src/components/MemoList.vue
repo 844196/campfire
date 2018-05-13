@@ -9,7 +9,7 @@
     .meta-info
       .title {{ memo.title }}
       timeago.updated-at(:since="memo.updatedAt", :auto-update="60", :max-time="60 * 60 * 24")
-    .delete(@click="deleteMemo({ uuid: memo.uuid })")
+    .delete(@click="onDelete(memo.uuid)")
       v-icon(name="x")
 </template>
 
@@ -17,6 +17,7 @@
 import Vue from 'vue'
 import Memo from '@/models/memo'
 import { memosHelpers } from '@/store/memos'
+import UUID from '@/utils/uuid'
 
 export default Vue.extend({
   name: 'MemoList',
@@ -26,7 +27,18 @@ export default Vue.extend({
       required: true
     }
   },
-  methods: memosHelpers.mapActions({ deleteMemo: 'delete' })
+  methods: {
+    ...memosHelpers.mapActions({ _deleteMemo: 'delete' }),
+    async onDelete (uuid: UUID) {
+      const confirmed = confirm('Are you sure?')
+
+      if (!confirmed) {
+        return
+      }
+
+      await this._deleteMemo({ uuid })
+    }
+  }
 })
 </script>
 
