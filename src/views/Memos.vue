@@ -33,7 +33,7 @@ export default Vue.extend({
 
   .memo-list
     height: 100%
-    width: 18rem
+    width: 16rem
 
   .router-view
     height: 100%

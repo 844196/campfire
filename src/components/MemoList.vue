@@ -54,13 +54,13 @@ export default Vue.extend({
     .meta-info
       overflow: hidden
       .title
-        font-size: 16px
+        font-size: 15px
         color: #42526e
         overflow: hidden
         white-space: nowrap
         text-overflow: ellipsis
       .updated-at
-        font-size: 11px
+        font-size: 10px
         color: #a5adba
     .delete
       display: none
@@ -81,5 +81,5 @@ export default Vue.extend({
         &:hover
           color: #091e42
         .icon
-          width: 18px
+          width: 17px
 </style>
