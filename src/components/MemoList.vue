@@ -34,7 +34,7 @@ export default Vue.extend({
 .memo-list
   font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif
   background-color: #f4f5f7
-  padding: 1rem .5rem
+  padding: .5rem
   overflow-y: auto
   &::-webkit-scrollbar
     width: 7px
