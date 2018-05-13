@@ -65,6 +65,8 @@ export default function install (md: MarkdownIt.MarkdownIt, rules?: Array<Anydow
       uuid () {
         // @ts-ignore: 非公開プロパティ
         this._vnode = null
+
+        this.$forceUpdate()
       }
     },
     render (h): VNode {
