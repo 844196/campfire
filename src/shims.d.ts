@@ -1,6 +1,3 @@
-/* eslint-disable import/no-duplicates */
-/* eslint-disable import/export */
-
 declare module '*.vue' {
   import Vue from 'vue'
   export default Vue
@@ -46,7 +43,6 @@ declare module 'vue-routisan' {
     prefix?: string
     beforeEnter?: Guard
   }
-  // eslint-disable-next-line space-infix-ops
   type Resolver<T = any> = (param: T) => Component
 
   class Route {
@@ -77,7 +73,6 @@ type BindOptions = {
   wait?: boolean
 }
 
-// eslint-disable-next-line space-infix-ops
 type BindHelpers<C> = {
   bindFirebaseRef: (
     key: keyof C['state'],
