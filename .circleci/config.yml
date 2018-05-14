@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           key: dist-{{ epoch }}
           paths:
-            - ~/repo/dist
+            - dist
   deploy-prod:
     docker:
       - image: circleci/node:9.4
