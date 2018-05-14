@@ -1,5 +1,5 @@
 <template lang="pug">
-render.markdown-body(:uuid="uuid.toString()", :value="value", @input="onInput")
+render.markdown-body(:uuid="uuid.toString()", :value="value", @input="$emit('input', $event)")
 </template>
 
 <script lang="ts">
@@ -40,11 +40,6 @@ export default Vue.extend({
     value: {
       type: String,
       required: true
-    }
-  },
-  methods: {
-    onInput (value: string) {
-      this.$emit('input', value)
     }
   }
 })
