@@ -27,7 +27,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dist-
+          keys:
+            - v1-dependencies-
+            - dist-
       - run:
           name: Deploy to production
           command: |
