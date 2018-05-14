@@ -6,6 +6,9 @@ import { v4 as isUUID } from 'is-uuid'
 import MarkdownIt from 'markdown-it'
 import transformer from './transformer'
 import reflect from './reflector'
+import Hashids from 'hashids'
+
+const hashids = new Hashids('', 16, 'abcdefghijklmnopqrstuvwxyz')
 
 export type AnydownRule = {
   lang: string
@@ -14,14 +17,10 @@ export type AnydownRule = {
 
 export default function install (md: MarkdownIt.MarkdownIt, rules?: Array<AnydownRule>): VueConstructor {
   let components: ComponentOptions<Vue>['components'] = {}
-  for (const r of (rules || [])) {
-    const C = Vue.extend(r.component)
-    const c = new C({ propsData: { value: '' } })
-    const cName = c.$options.name!
-    c.$destroy()
-
-    components[cName] = r.component
-    md.use(transformer, { lang: r.lang, eleName: cName })
+  for (const [idx, { lang, component }] of (rules || []).entries()) {
+    const name = hashids.encode(idx)
+    components[name] = component
+    md.use(transformer, { lang, eleName: name })
   }
 
   return Vue.extend({
