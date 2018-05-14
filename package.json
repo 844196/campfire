@@ -5,8 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "deploy": "push-dir --verbose --cleanup --dir dist --branch gh-pages"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "firebase": "^4.10.1",
@@ -41,6 +40,7 @@
     "@vue/eslint-config-standard": "^3.0.0-beta.1",
     "@vue/eslint-config-typescript": "^3.0.0-beta.6",
     "element-ui": "^2.3.3",
+    "netlify-cli": "^1.2.2",
     "pug": "^2.0.0-rc.4",
     "pug-loader": "^2.3.0",
     "push-dir": "^0.4.1",
