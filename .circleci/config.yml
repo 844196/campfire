@@ -8,11 +8,11 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+            - node-modules-{{ checksum "yarn.lock" }}
+            - node-modules-
       - run: yarn install
       - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: node-modules-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
       - run: yarn build
@@ -27,9 +27,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-
-            - dist-
+          key: node-modules-
+      - restore_cache:
+          key: dist-
       - run:
           name: Deploy to production
           command: |
