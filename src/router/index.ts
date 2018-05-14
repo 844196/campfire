@@ -6,6 +6,6 @@ Vue.use(VueRouter)
 
 export default new VueRouter({
   mode: 'hash',
-  base: '/campfire/',
+  base: '/',
   routes
 })

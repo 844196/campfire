@@ -80,6 +80,6 @@
     "not ie <= 8"
   ],
   "vue": {
-    "baseUrl": "/campfire/"
+    "baseUrl": "/"
   }
 }
