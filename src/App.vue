@@ -14,9 +14,9 @@ Vue.use(ElementUI)
 Vue.use(FeatherIcons, 'v-icon')
 Vue.use(Timeago, {
   name: 'timeago',
-  locale: 'ja-JP',
+  locale: 'ja',
   locales: {
-    'ja-JP': require('vue-timeago/locales/ja-JP.json')
+    'ja': require('date-fns/locale/ja')
   }
 })
 
