@@ -31,7 +31,7 @@ export default Vue.extend({
   data () {
     return {
       cached: this.memo,
-      storeState: StoreState.DOING
+      storeState: StoreState.COMPLETED
     }
   },
   computed: {
