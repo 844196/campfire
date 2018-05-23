@@ -1,20 +1,22 @@
 import { RouteConfig } from 'vue-router'
 import store from '@/store'
 import UUID from '@/utils/uuid'
-
-const v = (name: string) => require(`@/views/${name}.vue`).default
-const c = (name: string) => require(`@/components/${name}.vue`).default
+import LoginView from '@/views/Login.vue'
+import MainView from '@/views/Main.vue'
+import MemosView from '@/views/Memos.vue'
+import MemoEditorView from '@/views/MemoEditor.vue'
+import MemoEmptyState from '@/components/atoms/MemoEmptyState.vue'
 
 const routes: RouteConfig[] = [
   {
     path: '/login',
     name: 'login',
-    component: v('Login')
+    component: LoginView
   },
   {
     path: '/',
     name: 'main',
-    component: v('Main'),
+    component: MainView,
     beforeEnter (to, _, next) {
       if (store.getters['auth/authed']) {
         next()
@@ -30,12 +32,12 @@ const routes: RouteConfig[] = [
       {
         path: 'memos',
         name: 'memos',
-        component: v('Memos'),
+        component: MemosView,
         children: [
           {
             path: '',
             name: 'memoHome',
-            component: c('atoms/MemoEmptyState')
+            component: MemoEmptyState
           },
           {
             path: 'new',
@@ -48,7 +50,7 @@ const routes: RouteConfig[] = [
           {
             path: ':memoUUID',
             name: 'memo',
-            component: v('MemoEditor'),
+            component: MemoEditorView,
             props: ({ params }) => ({
               memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid)
             })
