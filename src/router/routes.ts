@@ -48,7 +48,7 @@ const routes: RouteConfig[] = [
           {
             path: ':memoUUID',
             name: 'memo',
-            component: c('MemoEditor'),
+            component: v('MemoEditor'),
             props: ({ params }) => ({
               memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid)
             })
