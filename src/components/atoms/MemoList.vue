@@ -8,7 +8,7 @@
   )
     .meta-info
       .title {{ memo.title }}
-      timeago.updated-at(:since="memo.updatedAt", :auto-update="60", :max-time="60 * 60 * 24")
+      timeago.updated-at(:since="memo.updatedAt", :auto-update="60", :include-seconds="true")
     .delete(@click="onDelete(memo.uuid)")
       v-icon(name="x")
 </template>
