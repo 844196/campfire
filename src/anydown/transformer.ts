@@ -1,4 +1,4 @@
-import MarkdownIt from 'markdown-it'
+import { MarkdownIt } from 'markdown-it'
 import { escape } from 'lodash'
 
 interface Options {
@@ -6,7 +6,7 @@ interface Options {
   eleName: string
 }
 
-export default function (md: MarkdownIt.MarkdownIt, { lang, eleName }: Options) {
+export default function (md: MarkdownIt, { lang, eleName }: Options) {
   const origin = md.renderer.rules.fence
 
   md.renderer.rules.fence = (tokens, index, options, env, self) => {

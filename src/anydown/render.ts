@@ -3,7 +3,7 @@ import { VueConstructor } from 'vue/types/vue'
 import { ComponentOptions } from 'vue/types/options'
 import VueWithCompiler from 'vue/dist/vue.esm'
 import { v4 as isUUID } from 'is-uuid'
-import MarkdownIt from 'markdown-it'
+import { MarkdownIt } from 'markdown-it'
 import transformer from './transformer'
 import reflect from './reflector'
 import Hashids from 'hashids'
@@ -15,7 +15,7 @@ export type AnydownRule = {
   component: any
 }
 
-export default function install (md: MarkdownIt.MarkdownIt, rules?: Array<AnydownRule>): VueConstructor {
+export default function install (md: MarkdownIt, rules?: Array<AnydownRule>): VueConstructor {
   let components: ComponentOptions<Vue>['components'] = {}
   for (const [idx, { lang, component }] of (rules || []).entries()) {
     const name = hashids.encode(idx)
