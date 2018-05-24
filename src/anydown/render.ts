@@ -68,13 +68,13 @@ export default function install (md: MarkdownIt.MarkdownIt, rules?: Array<Anydow
         this.$forceUpdate()
       }
     },
-    render (h): VNode {
-      return this.templateRender ? this.templateRender() : h('div')
-    },
     methods: {
       onInput (value: string, position: [number, number]) {
         this.$emit('input', reflect(this.value, value, position))
       }
+    },
+    render (h): VNode {
+      return this.templateRender ? this.templateRender() : h('div')
     }
   })
 }

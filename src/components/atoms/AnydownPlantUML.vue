@@ -20,13 +20,13 @@ export default Vue.extend({
       src: ''
     }
   },
-  created () {
-    this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
-  },
   watch: {
     value: debounce(function (this: any) {
       this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
     }, 1000, { leading: false, trailing: true })
+  },
+  created () {
+    this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
   }
 })
 </script>
