@@ -1,7 +1,6 @@
 export {
   default,
-  default as install,
-  AnydownRule
+  default as install
 } from './render'
 
 export {

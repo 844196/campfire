@@ -19,9 +19,11 @@ export default Vue.extend({
   name: 'MemoEditorSidebar',
   props: {
     storeState: {
+      type: String as () => StoreState,
       validator (_: StoreState): boolean {
         return true
-      }
+      },
+      required: true
     }
   }
 })

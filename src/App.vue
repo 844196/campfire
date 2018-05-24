@@ -4,13 +4,10 @@ router-view
 
 <script>
 import Vue from 'vue'
-import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
-import 'element-ui/lib/theme-chalk/index.css'
 import FeatherIcons from 'vue-icon'
 import Timeago from 'vue-timeago'
 
-Vue.use(ElementUI)
 Vue.use(FeatherIcons, 'v-icon')
 Vue.use(Timeago, {
   name: 'timeago',
