@@ -94,42 +94,6 @@ declare module 'vuexfire' {
   const firebaseMutations: any
 }
 
-declare module 'unist' {
-  export = Unist
-
-  namespace Unist {
-    interface Node {
-      type: string
-      data?: Data
-      position?: Position
-    }
-
-    interface Data {
-      // empty
-    }
-
-    interface Position {
-      start: Point
-      end: Point
-      indent?: Array<number>
-    }
-
-    interface Point {
-      line: number
-      column: number
-      offset?: number
-    }
-
-    interface Parent extends Node {
-      children: Array<Node>
-    }
-
-    interface Text extends Node {
-      value: string
-    }
-  }
-}
-
 declare module 'mdast' {
   import { Text } from 'unist'
 
@@ -170,75 +134,6 @@ declare module 'unist-util-visit' {
         parent: Parent | null
       ): EXIT | CONTINUE | SKIP | number | void
     }
-  }
-}
-
-declare module 'vfile-message' {
-  import { Node, Position, Point } from 'unist'
-
-  interface VMessage {
-    reason: string
-    fatal?: boolean | null
-    line: number | null
-    column: number | null
-    source: string | null
-    ruleId: string | null
-    stack: string | null
-
-    new (
-      reason: string | Error,
-      position?: Node | Position | Point,
-      origin?: string
-    )
-  }
-}
-
-declare module 'vfile' {
-  import VMessage from 'vfile-message'
-  import { Node, Position, Point } from 'unist'
-
-  interface VFileStatic {
-    (value?: string): VFile.VFile<string>
-    (value: Buffer): VFile.VFile<Buffer>
-    <T> (value: VFile.VFile<T>): VFile.VFile<T>
-  }
-
-  var VFile: VFileStatic
-  export = VFile
-
-  namespace VFile {
-    interface VFile<T> {
-      contents: T | null
-      cwd: string
-      path?: string
-      basename?: string
-      stem?: string
-      extname?: string
-      dirname?: string
-      history: Array<string>
-      messages: Array<VMessage>
-      data: any
-
-      toString (encoding?: string): string
-
-      message (
-        reason: string | Error,
-        position?: Node | Position | Point,
-        origin?: string
-      ): VMessage
-      info (
-        reason: string | Error,
-        position?: Node | Position | Point,
-        origin?: string
-      ): VMessage
-      fail (
-        reason: string | Error,
-        position?: Node | Position | Point,
-        origin?: string
-      ): never
-    }
-
-    type ConstructorParam = string | Buffer | VFile
   }
 }
 
