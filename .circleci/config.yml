@@ -44,8 +44,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run:
-          name: Deploy to production
+      - deploy:
           command: |
             node_modules/.bin/netlify deploy \
                 --access-token "${NETLIFY_ACCESS_TOKEN}" \
