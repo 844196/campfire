@@ -31,7 +31,7 @@
     "@types/codemirror": "^0.0.56",
     "@types/firebase": "^3.2.1",
     "@types/hashids": "^1.0.30",
-    "@types/lodash": "^4.14.105",
+    "@types/lodash": "^4.14.109",
     "@types/markdown-it": "^0.0.4",
     "@types/uuid": "^3.4.3",
     "@vue/cli-plugin-babel": "^3.0.0-beta.1",
