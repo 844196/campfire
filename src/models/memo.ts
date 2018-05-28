@@ -1,7 +1,4 @@
-import MarkdownIt from 'markdown-it'
 import UUID from '@/utils/uuid'
-
-const md = new MarkdownIt()
 
 /**
  * 型付けされた生のメモ
@@ -26,14 +23,8 @@ export default class Memo {
   ) {}
 
   get title (): string {
-    const dom = document.createElement('div')
-    dom.innerHTML = md.render(this.content)
-
-    const title = Array.from(dom.querySelectorAll('h1, h2, h3, h4, h5, h6'))
-      .map(ele => ele.textContent)
-      .find(txt => txt !== '') || 'Untitled'
-
-    return title
+    // FIXME
+    return 'Untitled'
   }
 
   deflate (): RawMemo {

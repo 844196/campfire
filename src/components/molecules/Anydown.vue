@@ -1,42 +1,24 @@
 <template lang="pug">
-render.markdown-body(:uuid="uuid.toString()", :value="value", @input="$emit('input', $event)")
+renderer.markdown-body(:value="value", @input="$emit('input', $event)")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import install from '@/anydown'
-import UUID from '@/utils/uuid'
-import MarkdownIt from 'markdown-it'
-import linkAttributes from 'markdown-it-link-attributes'
+import { Installer as RendererInstaller } from '@/anydown'
+import PlantUMLComponent from '@/components/atoms/AnydownPlantUML.vue'
+import TestComponent from '@/components/atoms/AnydownTest.vue'
 
-const md = new MarkdownIt()
-  .use(linkAttributes, {
-    attrs: {
-      target: '_blank'
-    }
-  })
-
-const render = install(md, [
-  {
-    lang: 'uml',
-    component: require('@/components/atoms/AnydownPlantUML.vue').default
-  },
-  {
-    lang: 'test',
-    component: require('@/components/atoms/AnydownTest.vue').default
-  }
-])
+const renderer = new RendererInstaller()
+  .addAnydownComponent('uml', PlantUMLComponent)
+  .addAnydownComponent('test', TestComponent)
+  .install()
 
 export default Vue.extend({
   name: 'Anydown',
   components: {
-    render
+    renderer
   },
   props: {
-    uuid: {
-      type: Object as () => UUID,
-      required: true
-    },
     value: {
       type: String,
       required: true
