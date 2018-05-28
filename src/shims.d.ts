@@ -3,11 +3,6 @@ declare module '*.vue' {
   export default Vue
 }
 
-declare module 'vue/dist/vue.esm' {
-  import Vue from 'vue'
-  export default Vue
-}
-
 declare module 'is-uuid' {
   function v1 (str: string): boolean
   function v2 (str: string): boolean
@@ -94,101 +89,4 @@ declare module 'vuexfire' {
   const firebaseMutations: any
 }
 
-declare module 'mdast' {
-  import { Text } from 'unist'
-
-  export = MDAST
-
-  namespace MDAST {
-    interface Code extends Text {
-      type: 'code',
-      lang: string | null
-    }
-
-    interface HTML extends Text {
-      type: 'html'
-    }
-  }
-}
-
-declare module 'unist-util-visit' {
-  import { Node, Parent } from 'unist'
-
-  var Visit: Visit.Visit
-  export = Visit
-
-  namespace Visit {
-    type EXIT = false
-    type CONTINUE = true
-    type SKIP = 'skip'
-
-    interface Visit {
-      <T = Node>(node: Node, visitor: Visitor<T>, reverse: boolean = false): void
-      <T = Node>(node: Node, test: any, visitor: Visitor<T>, reverse: boolean = false): void
-    }
-
-    interface Visitor<T = Node> {
-      (
-        node: T,
-        index: number | null,
-        parent: Parent | null
-      ): EXIT | CONTINUE | SKIP | number | void
-    }
-  }
-}
-
-declare module 'unified' {
-  import { VFile, ConstructorParam as VFileParam } from 'vfile'
-  import { Node } from 'unist'
-
-  var Unified: () => Unified.Processor
-  export = Unified
-
-  namespace Unified {
-    interface Processor {
-      use (plugin: Attacher<never>): Processor
-      use <T>(plugin: Attacher<T>, options: T): Processor
-
-      parse (file: VFile | VFileParam): Node
-
-      stringify (node: Node, file?: VFile | VFileParam): string
-
-      run (
-        node: Node,
-        file?: VFile | VFileParam,
-        done?: (err: Error | null, node?: Node, file?: VFile) => void
-      ): Promise<Node>
-      runSync (node: Node, file?: VFile | VFileParam): Node
-
-      process (file: VFile | string): Promise<VFile>
-      process (
-        file: VFile | string,
-        done: (err: Error | null, file: VFile) => void
-      ): void
-      processSync (file: VFile | string): VFile
-
-      data (key: string): any
-      data (key: string, value: any): Processor
-
-      freeze (): Processor
-    }
-
-    interface Attacher<T> {
-      (this: Processor, options: T): Transformer | void
-    }
-
-    interface Transformer {
-      (
-        node: Node,
-        file: VFile,
-        next?: (err: Error | null, node?: Node, file?: VFile) => void
-      ): Error | Node | Promise<Node>
-    }
-  }
-}
-
-declare module 'remark-parse'
-declare module 'remark-html'
-
 declare module 'vue-codemirror-lite'
-declare module 'markdown-it-link-attributes'

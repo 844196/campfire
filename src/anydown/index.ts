@@ -1,12 +1,6 @@
-export {
-  default,
-  default as install
-} from './render'
+import Installer from './installer'
 
-export {
-  default as transformerInstall
-} from './transformer'
+export { Installer }
 
-export {
-  default as reflector
-} from './reflector'
+// simple renderer
+export default new Installer().install()
