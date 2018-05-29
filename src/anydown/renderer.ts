@@ -21,8 +21,8 @@ export default function install (parse: Parser, compile: Compiler, reflect: Refl
         this.$emit('input', reflect(this.value, value, position))
       }
     },
-    render (h) {
-      return compile(parse(this.value), h, this.$options.methods!.onInput.bind(this))
+    render (h): VNode {
+      return compile(parse(this.value), h, this.onInput)
     }
   })
 }
