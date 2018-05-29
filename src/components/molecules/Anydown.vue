@@ -27,4 +27,9 @@ export default Vue.extend({
 })
 </script>
 
+<style lang="stylus" scoped>
+.markdown-body .task-list-item input
+  vertical-align: unset
+</style>
+
 <style src="github-markdown-css/github-markdown.css">
