@@ -5,7 +5,7 @@ img(:src="src")
 <script lang="ts">
 import Vue from 'vue'
 import PlantUML from 'plantuml-encoder'
-import { debounce } from 'lodash'
+import { throttle } from 'lodash'
 
 export default Vue.extend({
   name: 'AnydownPlantUML',
@@ -20,13 +20,22 @@ export default Vue.extend({
       src: ''
     }
   },
-  watch: {
-    value: debounce(function (this: any) {
-      this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
-    }, 1000, { leading: false, trailing: true })
+  computed: {
+    decodedUrl (): string {
+      return `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
+    }
   },
   created () {
-    this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
+    this.updateSrc()
+    this.$watch('value', throttle(this.updateSrc, 800, {
+      leading: false,
+      trailing: true
+    }))
+  },
+  methods: {
+    updateSrc () {
+      this.src = this.decodedUrl
+    }
   }
 })
 </script>
