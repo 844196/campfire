@@ -1,15 +1,15 @@
 <template lang="pug">
-codemirror.memo-editor-textarea(:value="value", :options="options", @change="$emit('input', $event)")
+codemirror.memo-editor-textarea(ref="codemirror", :value="value", :options="options", @change="onInput", @click.native="onClick")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { codemirror } from 'vue-codemirror-lite'
-import { EditorConfiguration } from 'codemirror'
+// eslint-disable-next-line space-infix-ops
+import { Editor, EditorConfiguration } from 'codemirror'
 import 'codemirror/mode/markdown/markdown.js'
 import 'codemirror/lib/codemirror.css'
 
-// eslint-disable-next-line space-infix-ops
 const options: EditorConfiguration = {
   mode: {
     name: 'text/x-markdown',
@@ -41,6 +41,24 @@ export default Vue.extend({
   data () {
     return {
       options
+    }
+  },
+  methods: {
+    onInput (value: string) {
+      this.$emit('input', value)
+    },
+    onClick () {
+      const cm = (this.$refs.codemirror as Vue & { editor: Editor }).editor
+      if (cm.hasFocus()) {
+        return
+      }
+
+      const doc = cm.getDoc()
+      const line = doc.lastLine()
+      const ch = doc.getLine(line).length
+
+      doc.setCursor({ line, ch })
+      cm.focus()
     }
   }
 })

@@ -60,7 +60,7 @@ export default Vue.extend({
 
 <style lang="stylus">
 .markdown-body li>p
-  margin-top: unset
+  margin-top: unset !important
   margin-bottom: .25em
 </style>
 
