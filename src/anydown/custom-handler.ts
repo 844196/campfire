@@ -4,7 +4,12 @@ import { Node as MNode } from 'unist'
 import { CreateElement, VNode } from 'vue'
 import { InputHandler } from './renderer'
 
-type CustomHandler = (node: MNode, h: CreateElement, inputHandler: InputHandler) => VNode | void
+type CustomHandler = (
+  node: MNode,
+  h: CreateElement,
+  inputHandler: InputHandler,
+  bundledHandlers: BundledHandlers
+) => VNode | void
 type BundledHandlers = Required<toHASTOptions>['handlers']
 
 export default class CustomHandlerSet {
@@ -19,11 +24,11 @@ export default class CustomHandlerSet {
   }
 
   bundle (h: CreateElement, inputHandler: InputHandler, defaultHandlers: BundledHandlers): BundledHandlers {
-    return mapValues(this.customHandlers, (handlers, type) => {
+    const bundledHandlers = mapValues(this.customHandlers, (handlers, type) => {
       return (u: Function, node: MNode, parent: MNode) => {
         let vnode: VNode | undefined
         for (const handler of handlers) {
-          const v = handler(node, h, inputHandler)
+          const v = handler(node, h, inputHandler, bundledHandlers)
           if (v) {
             vnode = v
             break
@@ -32,5 +37,6 @@ export default class CustomHandlerSet {
         return vnode || defaultHandlers[type](u, node, parent)
       }
     })
+    return bundledHandlers
   }
 }
