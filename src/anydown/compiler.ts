@@ -1,27 +1,22 @@
-import {
-  Element as HNodeElement,
-  ElementProperties as HNodeElementProperties,
-  TextNode as HNodeText
-} from 'hast'
 import h from 'hastscript'
 import { reduce } from 'lodash'
-import { Root as MNodeRoot } from 'mdast'
 import toHNode from 'mdast-util-to-hast'
 import defaultHNodeHandlers from 'mdast-util-to-hast/lib/handlers'
-import {
-  VNode,
-  VNodeData,
-  CreateElement as VNodeFactory
-} from 'vue'
 import {
   isHNodeElement,
   isHNodeText,
   isVNode
 } from './assertion-helper'
 import CustomHandlerSet from './custom-handler'
-import { InputHandler } from './renderer'
-
-type HNode = HNodeElement | HNodeText
+import {
+  HNode,
+  HNodeElementProperties,
+  InputHandler,
+  MNodeRoot,
+  VNode,
+  VNodeData,
+  VNodeFactory
+} from './types'
 
 function toVNodeProps (from: HNodeElementProperties) {
   return reduce(from, (acc, value, key) => {

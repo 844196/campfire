@@ -1,9 +1,9 @@
 import {
-  Element as HNodeElement,
-  TextNode as HNodeText
-} from 'hast'
-import { Code as MNodeCode } from 'mdast'
-import { VNode } from 'vue'
+  VNode,
+  HNodeText,
+  HNodeElement,
+  MNodeCode
+} from './types'
 
 export function isVNode (node: any): node is VNode {
   return node.isRootInsert !== undefined

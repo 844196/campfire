@@ -1,16 +1,5 @@
 import { mapValues } from 'lodash'
-import { Options as toHASTOptions } from 'mdast-util-to-hast'
-import { Node as MNode } from 'unist'
-import { CreateElement, VNode } from 'vue'
-import { InputHandler } from './renderer'
-
-type CustomHandler = (
-  node: MNode,
-  h: CreateElement,
-  inputHandler: InputHandler,
-  bundledHandlers: BundledHandlers
-) => VNode | void
-type BundledHandlers = Required<toHASTOptions>['handlers']
+import { BundledHandlers, CustomHandler, InputHandler, MNode, VNode, VNodeFactory } from './types'
 
 export default class CustomHandlerSet {
   private customHandlers: { [key: string]: Array<CustomHandler> } = {}
@@ -23,7 +12,7 @@ export default class CustomHandlerSet {
     return this
   }
 
-  bundle (h: CreateElement, inputHandler: InputHandler, defaultHandlers: BundledHandlers): BundledHandlers {
+  bundle (h: VNodeFactory, inputHandler: InputHandler, defaultHandlers: BundledHandlers): BundledHandlers {
     const bundledHandlers = mapValues(this.customHandlers, (handlers, type) => {
       return (u: Function, node: MNode, parent: MNode) => {
         let vnode: VNode | undefined

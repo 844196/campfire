@@ -1,5 +1,5 @@
 import { Position } from 'unist'
-import { Reflector } from './renderer'
+import { Reflector } from './types'
 
 function parseBlock (block: Array<string>) {
   const openFence = block[0]

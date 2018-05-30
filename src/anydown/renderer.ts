@@ -1,10 +1,5 @@
-import { Root as MNodeRoot } from 'mdast'
-import Vue, { CreateElement, VNode } from 'vue'
-
-export type InputHandler = (reflect: Reflector) => void
-export type Parser = (src: string) => MNodeRoot
-export type Compiler = (mnodeRoot: MNodeRoot, h: CreateElement, onInput: InputHandler) => VNode
-export type Reflector = (src: string) => string
+import Vue, { VNode } from 'vue'
+import { Compiler, Parser, Reflector } from './types'
 
 export default function install (parse: Parser, compile: Compiler) {
   return Vue.extend({
