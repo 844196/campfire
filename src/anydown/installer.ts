@@ -1,14 +1,15 @@
+import { Component } from 'vue'
+import { isMNodeCode } from './assertion-helper'
+import installCompiler from './compiler'
 import CustomHandlerSet from './custom-handler'
 import installParser from './parser'
-import installRenderer from './renderer'
-import installCompiler from './compiler'
 import installReflector from './reflector'
-import { isMNodeCode } from './assertion-helper'
+import installRenderer from './renderer'
 
 export default class Installer {
   private customHandlers = new CustomHandlerSet()
 
-  addAnydownComponent (lang: string, component: any) {
+  addAnydownComponent (lang: string, component: Component<any, any, any, any>) {
     this.customHandlers.add('code', (node, h, onInput) => {
       if (!isMNodeCode(node)) {
         return
