@@ -34,7 +34,7 @@ export default Vue.extend({
 .icon
   width: 24px
 .toasted-container.bottom-center
-  bottom: 1em
+  bottom: 1em !important
 .toasted-container.top-right
   top: 5px
   right: 15px
