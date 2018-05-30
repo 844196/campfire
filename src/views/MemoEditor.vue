@@ -58,7 +58,15 @@ export default Vue.extend({
       '_createOrUpdate': 'createOrUpdate'
     }),
     createOrUpdate: debounce(async function (this: any) {
-      await this._createOrUpdate({ memo: this.memo })
+      this._createOrUpdate({ memo: this.memo })
+        .then(() => {
+          this.$toasted.show('保存しました', { icon: 'done' })
+          this.storeState = StoreState.COMPLETED
+        })
+        .catch(() => {
+          this.$toasted.error('保存に失敗しました', { icon: 'error' })
+          this.storeState = StoreState.FAILED
+        })
     }, 750, { leading: false, trailing: true })
   }
 })

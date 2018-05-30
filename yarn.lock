@@ -8122,6 +8122,10 @@ vue-timeago@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/vue-timeago/-/vue-timeago-4.0.1.tgz#c0ac4a10ed3c091713f6e2a64571b26f1d94a3e7"
 
+vue-toasted@^1.1.24:
+  version "1.1.24"
+  resolved "https://registry.yarnpkg.com/vue-toasted/-/vue-toasted-1.1.24.tgz#715a371dfa490cc710ffedaaeae61fd8a8c4f7ad"
+
 vue@^2.5.16:
   version "2.5.16"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
