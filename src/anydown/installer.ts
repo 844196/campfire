@@ -1,19 +1,16 @@
 import { Component } from 'vue'
-import { isMNodeCode } from './assertion-helper'
 import installCompiler from './compiler'
 import CustomHandlerSet from './custom-handler'
 import installParser from './parser'
 import { reflectToCodeBlock } from './reflector'
 import installRenderer from './renderer'
+import { CustomHandler, MNode, MNodeCode, MNodeType } from './types'
 
 export default class Installer {
   private customHandlers = new CustomHandlerSet()
 
   addAnydownComponent (lang: string, component: Component<any, any, any, any>) {
-    this.customHandlers.add('code', (node, h, onInput) => {
-      if (!isMNodeCode(node)) {
-        return
-      }
+    this.customHandlers.add<MNodeCode>('code', (node, _, { h, onInput }) => {
       if (node.lang !== lang) {
         return
       }
@@ -26,6 +23,11 @@ export default class Installer {
         }
       })
     })
+    return this
+  }
+
+  addCustomHandler<T extends MNode> (type: MNodeType<T>, customHandler: CustomHandler<T>) {
+    this.customHandlers.add<T>(type, customHandler)
     return this
   }
 

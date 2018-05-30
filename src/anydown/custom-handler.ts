@@ -1,10 +1,18 @@
 import { mapValues } from 'lodash'
-import { BundledHandlers, CustomHandler, InputHandler, MNode, VNode, VNodeFactory } from './types'
+import {
+  BundledHandlers,
+  ChildrenConverter,
+  CustomHandler,
+  InputHandler,
+  MNode,
+  VNode,
+  VNodeFactory
+} from './types'
 
 export default class CustomHandlerSet {
-  private customHandlers: { [key: string]: Array<CustomHandler> } = {}
+  private customHandlers: { [key: string]: Array<CustomHandler<any>> } = {}
 
-  add (type: string, handler: CustomHandler): this {
+  add<T extends MNode> (type: T['type'], handler: CustomHandler<T>): this {
     if (!this.customHandlers[type]) {
       this.customHandlers[type] = []
     }
@@ -12,12 +20,21 @@ export default class CustomHandlerSet {
     return this
   }
 
-  bundle (h: VNodeFactory, inputHandler: InputHandler, defaultHandlers: BundledHandlers): BundledHandlers {
-    const bundledHandlers = mapValues(this.customHandlers, (handlers, type) => {
+  bundle (
+    vnodeFactory: VNodeFactory,
+    inputHandler: InputHandler,
+    childrenConverter: ChildrenConverter,
+    defaultHandlers: BundledHandlers
+  ): BundledHandlers {
+    return mapValues(this.customHandlers, (handlers, type) => {
       return (u: Function, node: MNode, parent: MNode) => {
         let vnode: VNode | undefined
         for (const handler of handlers) {
-          const v = handler(node, h, inputHandler, bundledHandlers)
+          const v = handler(node, parent, {
+            h: vnodeFactory,
+            onInput: inputHandler,
+            convertChildren: childrenConverter
+          })
           if (v) {
             vnode = v
             break
@@ -26,6 +43,5 @@ export default class CustomHandlerSet {
         return vnode || defaultHandlers[type](u, node, parent)
       }
     })
-    return bundledHandlers
   }
 }

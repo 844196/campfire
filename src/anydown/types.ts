@@ -1,3 +1,6 @@
+/* eslint-disable indent */
+/* eslint-disable space-infix-ops */
+
 import {
   Element as HNodeElement,
   ElementProperties as HNodeElementProperties,
@@ -17,6 +20,7 @@ import {
 
 export type VNodeFactory = CreateElement
 export type HNode = HNodeElement | HNodeText
+export type VHNode = VNode | HNode
 export {
   MNode,
   VNode,
@@ -32,11 +36,17 @@ export type InputHandler = (reflect: Reflector) => void
 export type Parser = (src: string) => MNodeRoot
 export type Compiler = (mnodeRoot: MNodeRoot, h: VNodeFactory, onInput: InputHandler) => VNode
 export type Reflector = (src: string) => string
+export type ChildrenConverter = (children: Array<MNode>) => Array<VNode>
 
-export type CustomHandler = (
-  node: MNode,
-  h: VNodeFactory,
-  inputHandler: InputHandler,
-  bundledHandlers: BundledHandlers
+export type CustomHandler<T = MNode> = (
+  node: T,
+  parent: MNode,
+  utils: {
+    h: VNodeFactory,
+    onInput: InputHandler,
+    convertChildren: ChildrenConverter
+  }
 ) => VNode | void
 export type BundledHandlers = Required<toHASTOptions>['handlers']
+
+export type MNodeType<T extends MNode> = T['type'] & string

@@ -12,5 +12,11 @@ declare module 'mdast' {
       type: 'code'
       lang: string | null
     }
+
+    interface ListItem extends Parent {
+      type: 'listItem'
+      loose: boolean
+      checked: boolean | null
+    }
   }
 }

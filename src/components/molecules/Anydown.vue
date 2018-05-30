@@ -7,10 +7,41 @@ import Vue from 'vue'
 import { Installer as RendererInstaller } from '@/anydown'
 import PlantUMLComponent from '@/components/atoms/AnydownPlantUML.vue'
 import TestComponent from '@/components/atoms/AnydownTest.vue'
+import { ListItem } from 'mdast'
 
 const renderer = new RendererInstaller()
   .addAnydownComponent('uml', PlantUMLComponent)
   .addAnydownComponent('test', TestComponent)
+  .addCustomHandler('listItem', (node: ListItem, parent, { h, convertChildren, onInput }) => {
+    if (node.checked === null) {
+      return
+    }
+
+    const toggleCheckbox = (src: string) => {
+      let splited = src.split('\n')
+      const pos = node.position!.start.line - 1
+      const before = splited[pos]
+      if (node.checked) {
+        splited[pos] = before.replace(/\[x\]/, '[ ]')
+      } else {
+        splited[pos] = before.replace(/\[ \]/, '[x]')
+      }
+      return splited.join('\n')
+    }
+    const checkbox = h('input', {
+      attrs: {
+        type: 'checkbox',
+        checked: node.checked
+      },
+      on: {
+        change: () => onInput(toggleCheckbox)
+      }
+    })
+    const children = convertChildren(node.children)
+    const li = h('li', { class: 'task-list-item' }, [checkbox, ' ', ...children])
+
+    return parent.position!.start.column > 1 ? h('ul', [li]) : li
+  })
   .install()
 
 export default Vue.extend({
@@ -27,9 +58,10 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="stylus" scoped>
-.markdown-body .task-list-item input
-  vertical-align: unset
+<style lang="stylus">
+.markdown-body li>p
+  margin-top: unset
+  margin-bottom: .25em
 </style>
 
 <style src="github-markdown-css/github-markdown.css">

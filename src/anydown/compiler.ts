@@ -1,5 +1,5 @@
 import h from 'hastscript'
-import { reduce } from 'lodash'
+import { flattenDepth, reduce } from 'lodash'
 import toHNode from 'mdast-util-to-hast'
 import defaultHNodeHandlers from 'mdast-util-to-hast/lib/handlers'
 import {
@@ -9,30 +9,41 @@ import {
 } from './assertion-helper'
 import CustomHandlerSet from './custom-handler'
 import {
-  HNode,
-  HNodeElementProperties,
+  BundledHandlers,
+  ChildrenConverter,
+  HNodeElement,
+  HNodeText,
   InputHandler,
+  MNode,
   MNodeRoot,
   VNode,
   VNodeData,
   VNodeFactory
 } from './types'
 
-function toVNodeProps (from: HNodeElementProperties) {
+function toVNodeData (node: HNodeElement) {
+  const from = node.properties
+
   return reduce(from, (acc, value, key) => {
     if (key === 'className') {
       acc['class'] = value
       return acc
     }
+
     if (!acc.attrs) {
       acc['attrs'] = {}
     }
+
     acc.attrs![key] = value
+
     return acc
   }, {} as VNodeData)
 }
 
-function toVNode (v: VNodeFactory, node: VNode | HNode, children: Array<VNode | HNode>): VNode | string {
+function toVNode (vnodeFactory: VNodeFactory, node: HNodeText, children: Array<VNode | HNodeElement | HNodeText>): string
+function toVNode (vnodeFactory: VNodeFactory, node: HNodeElement, children: Array<VNode | HNodeElement | HNodeText>): VNode
+function toVNode (vnodeFactory: VNodeFactory, node: VNode, children: Array<VNode | HNodeElement | HNodeText>): VNode
+function toVNode (vnodeFactory: VNodeFactory, node: VNode | HNodeText | HNodeElement, children: Array<VNode | HNodeElement | HNodeText>) {
   if (isVNode(node)) {
     return node
   }
@@ -41,18 +52,27 @@ function toVNode (v: VNodeFactory, node: VNode | HNode, children: Array<VNode | 
     return node.value
   }
 
-  return v(
+  return vnodeFactory(
     node.tagName,
-    toVNodeProps(node.properties),
-    children.map(c => toVNode(v, c, isHNodeElement(c) ? c.children as Array<VNode | HNode> : []))
+    toVNodeData(node),
+    children.map<VNode | string>(n => toVNode(vnodeFactory, n as any, isHNodeElement(n) ? n.children as any : []))
   )
 }
 
+function toVHNode (mnode: MNode, handlers: BundledHandlers) {
+  const result = toHNode(mnode, { handlers })
+  return result as typeof result & { children: Array<VNode | HNodeElement | HNodeText> }
+}
+
 export default function install (customHandlers: CustomHandlerSet) {
-  return function (mnodeRoot: MNodeRoot, v: VNodeFactory, inputHandler: InputHandler) {
-    const hnode = toHNode(mnodeRoot, {
-      handlers: customHandlers.bundle(v, inputHandler, defaultHNodeHandlers)
-    })
-    return toVNode(v, h('div'), hnode.children as Array<VNode | HNode>) as VNode
+  return function (mnode: MNodeRoot, vnodeFactory: VNodeFactory, inputHandler: InputHandler) {
+    let handlers: BundledHandlers
+    const childrenConverter: ChildrenConverter = (children) => {
+      const vhnodes = flattenDepth(children.map(c => toVHNode(c, handlers)).map(c => c.children), 1)
+      return toVNode(vnodeFactory, h('div'), vhnodes).children || []
+    }
+    handlers = customHandlers.bundle(vnodeFactory, inputHandler, childrenConverter, defaultHNodeHandlers)
+
+    return toVNode(vnodeFactory, h('div'), toVHNode(mnode, handlers).children)
   }
 }
