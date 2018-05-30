@@ -3,7 +3,7 @@ import { isMNodeCode } from './assertion-helper'
 import installCompiler from './compiler'
 import CustomHandlerSet from './custom-handler'
 import installParser from './parser'
-import installReflector from './reflector'
+import { reflectToCodeBlock } from './reflector'
 import installRenderer from './renderer'
 
 export default class Installer {
@@ -19,7 +19,7 @@ export default class Installer {
       }
       return h(component, {
         on: {
-          input: (value: string) => onInput(value, node.position!)
+          input: (value: string) => onInput(reflectToCodeBlock(value, node.position!))
         },
         props: {
           value: node.value
@@ -32,8 +32,7 @@ export default class Installer {
   install () {
     return installRenderer(
       installParser(),
-      installCompiler(this.customHandlers),
-      installReflector()
+      installCompiler(this.customHandlers)
     )
   }
 }

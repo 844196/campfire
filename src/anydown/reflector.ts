@@ -1,4 +1,5 @@
 import { Position } from 'unist'
+import { Reflector } from './renderer'
 
 function parseBlock (block: Array<string>) {
   const openFence = block[0]
@@ -13,8 +14,8 @@ function parseBlock (block: Array<string>) {
   return { openFence, closeFence, fence, indent, isFenceClosed }
 }
 
-export default function install () {
-  return function (src: string, value: string, position: Position): string {
+export function reflectToCodeBlock (value: string, position: Position): Reflector {
+  return function (src: string) {
     // FIXME: Unist.PositionをMarkdownItのmapに無理やり合わせている
     const start = position.start.line - 1
     const end = position.end.line

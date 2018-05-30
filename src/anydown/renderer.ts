@@ -1,13 +1,12 @@
 import { Root as MNodeRoot } from 'mdast'
-import { Position } from 'unist'
 import Vue, { CreateElement, VNode } from 'vue'
 
-export type InputHandler = (value: string, position: Position) => void
+export type InputHandler = (reflect: Reflector) => void
 export type Parser = (src: string) => MNodeRoot
 export type Compiler = (mnodeRoot: MNodeRoot, h: CreateElement, onInput: InputHandler) => VNode
-export type Reflector = (src: string, value: string, position: Position) => string
+export type Reflector = (src: string) => string
 
-export default function install (parse: Parser, compile: Compiler, reflect: Reflector) {
+export default function install (parse: Parser, compile: Compiler) {
   return Vue.extend({
     name: 'AnydownRenderer',
     props: {
@@ -17,8 +16,8 @@ export default function install (parse: Parser, compile: Compiler, reflect: Refl
       }
     },
     methods: {
-      onInput (value: string, position: Position) {
-        this.$emit('input', reflect(this.value, value, position))
+      onInput (reflect: Reflector) {
+        this.$emit('input', reflect(this.value))
       }
     },
     render (h): VNode {
