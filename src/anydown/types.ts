@@ -32,8 +32,9 @@ export type Compiler = (
 // VNodeを返さなかった場合は、デフォルトのハンドラが呼び出される
 export type CustomHandler<T extends MNode> = (
   node: T,
-  payload: CustomHandlerPayloadContext & CustomHandlerPayloadHelpers
+  payload: CustomHandlerPayload
 ) => VNode | void
+export type CustomHandlerPayload = CustomHandlerPayloadContext & CustomHandlerPayloadHelpers
 export type CustomHandlerPayloadContext = {
   parent: MNode
 }
