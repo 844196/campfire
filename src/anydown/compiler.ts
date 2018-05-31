@@ -1,8 +1,9 @@
 import { Element as HNodeElement, TextNode as HNodeText } from 'hast'
 import hast from 'hastscript'
-import { flattenDepth, reduce } from 'lodash'
+import { reduce } from 'lodash'
 import { Root as MNodeRoot } from 'mdast'
 import toHNode from 'mdast-util-to-hast'
+import { Parent } from 'unist'
 import { CreateElement, VNode, VNodeData } from 'vue'
 import CustomHandlerSet from './custom-handler'
 import { BundledHandlers, HNode, InputEventDispatcher, MNode } from './types'
@@ -42,9 +43,10 @@ function toVNode (h: CreateElement, node: VNode | HNode, children: Array<VNode |
   )
 }
 
-function toVHNode (mnode: MNode, handlers: BundledHandlers) {
-  const result = toHNode(mnode, { handlers })
-  return result as typeof result & { children: Array<VNode | HNode> }
+function toVHNode<T extends MNode> (mnode: T, handlers: BundledHandlers) {
+  return toHNode(mnode, { handlers }) as T extends Parent
+    ? Parent & { children: Array<VNode | HNode> }
+    : VNode | HNode
 }
 
 export default function install (customHandlers: CustomHandlerSet) {
@@ -53,8 +55,7 @@ export default function install (customHandlers: CustomHandlerSet) {
       h,
       onInput,
       handleChildren (children) {
-        const vhnodes = flattenDepth(children.map(c => toVHNode(c, handlers)).map(c => c.children), 1)
-        return toVNode(h, hast('div'), vhnodes).children || []
+        return toVNode(h, hast('div'), children.map(c => toVHNode(c, handlers))).children || []
       }
     })
     return toVNode(h, hast('div'), toVHNode(mnode, handlers).children)

@@ -1,5 +1,6 @@
 declare module 'mdast-util-to-hast' {
-  import { Root } from 'hast'
+  import { Node } from 'unist'
+  import { Root, Element, TextNode, Doctype, Comment } from 'hast'
 
   export type Handler = (h: Function, node: any, parent: any) => any
 
@@ -9,7 +10,7 @@ declare module 'mdast-util-to-hast' {
     handlers?: { [key: string]: Handler }
   }
 
-  export default function toHAST (node: any, options?: Options): Root
+  export default function toHAST (node: Node, options?: Options): Root | Element | TextNode | Doctype | Comment
 }
 
 declare module 'mdast-util-to-hast/lib/handlers' {

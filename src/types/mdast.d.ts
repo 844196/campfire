@@ -23,5 +23,9 @@ declare module 'mdast' {
       type: 'heading'
       depth: 1 | 2 | 3 | 4 | 5 | 6
     }
+
+    interface Paragraph extends Parent {
+      type: 'paragraph'
+    }
   }
 }
