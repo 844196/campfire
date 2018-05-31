@@ -18,15 +18,10 @@ const renderer = new RendererInstaller()
     }
 
     const toggleCheckbox = (src: string) => {
-      let splited = src.split('\n')
-      const pos = node.position!.start.line - 1
-      const before = splited[pos]
-      if (node.checked) {
-        splited[pos] = before.replace(/\[x\]/, '[ ]')
-      } else {
-        splited[pos] = before.replace(/\[ \]/, '[x]')
-      }
-      return splited.join('\n')
+      let lines = src.split('\n')
+      const idx = node.position!.start.line - 1
+      lines[idx] = lines[idx].replace(/\[[ x]\]/, node.checked ? '[ ]' : '[x]')
+      return lines.join('\n')
     }
     const checkbox = h('input', {
       attrs: {
