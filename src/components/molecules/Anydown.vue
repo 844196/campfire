@@ -8,7 +8,7 @@ import { Installer as RendererInstaller } from '@/anydown'
 import PlantUMLComponent from '@/components/atoms/AnydownPlantUML.vue'
 import TestComponent from '@/components/atoms/AnydownTest.vue'
 import PrettyCodeComponent from '@/components/atoms/AnydownPrettyCode.vue'
-import { ListItem } from 'mdast'
+import { ListItem, Paragraph } from 'mdast'
 
 const renderer = new RendererInstaller()
   .addAnydownComponent('uml', PlantUMLComponent)
@@ -34,6 +34,16 @@ const renderer = new RendererInstaller()
         change: () => onInput(toggleCheckbox)
       }
     })
+
+    const oldest = node.children[0]
+    const isP = (n: any): n is Paragraph => n && n.type === 'paragraph'
+    if (node.children.length === 1 && isP(oldest)) {
+      // TextNodeだけにする
+      node.children.splice(0, 1, oldest.children[0])
+    } else {
+      // TODO: 全体をParagraphで囲む
+    }
+
     const children = handleChildren(node.children)
     const li = h('li', { class: 'task-list-item' }, [checkbox, ' ', ...children])
 
