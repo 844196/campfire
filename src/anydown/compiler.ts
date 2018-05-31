@@ -4,7 +4,6 @@ import { flattenDepth, reduce } from 'lodash'
 import { Root as MNodeRoot } from 'mdast'
 import toHNode from 'mdast-util-to-hast'
 import { CreateElement, VNode, VNodeData } from 'vue'
-import { isHNodeElement, isHNodeText, isVNode } from './assertion-helper'
 import CustomHandlerSet from './custom-handler'
 import { BundledHandlers, HNode, InputEventDispatcher, MNode } from './types'
 
@@ -22,6 +21,10 @@ function toVNodeData (node: HNodeElement) {
     return acc
   }, {} as VNodeData)
 }
+
+const isVNode = (node: any): node is VNode => node.isRootInsert !== undefined
+const isHNodeText = (node: any): node is HNodeText => node.type === 'text'
+const isHNodeElement = (node: any): node is HNodeElement => node.type === 'element'
 
 function toVNode (h: CreateElement, node: HNodeText, children: Array<VNode | HNode>): string
 function toVNode (h: CreateElement, node: VNode | HNodeElement, children: Array<VNode | HNode>): VNode
