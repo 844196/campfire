@@ -29,7 +29,8 @@ export default class Installer {
           input: (value: string) => onInput(reflectToCodeBlock(value, node.position!))
         },
         props: {
-          value: node.value
+          value: node.value,
+          language: node.lang === null ? '' : node.lang
         }
       })
     })
