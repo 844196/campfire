@@ -12,7 +12,7 @@ import { ListItem } from 'mdast'
 const renderer = new RendererInstaller()
   .addAnydownComponent('uml', PlantUMLComponent)
   .addAnydownComponent('test', TestComponent)
-  .addCustomHandler('listItem', (node: ListItem, parent, { h, convertChildren, onInput }) => {
+  .addCustomHandler('listItem', (node: ListItem, { parent, h, onInput, handleChildren }) => {
     if (node.checked === null) {
       return
     }
@@ -37,7 +37,7 @@ const renderer = new RendererInstaller()
         change: () => onInput(toggleCheckbox)
       }
     })
-    const children = convertChildren(node.children)
+    const children = handleChildren(node.children)
     const li = h('li', { class: 'task-list-item' }, [checkbox, ' ', ...children])
 
     return parent.position!.start.column > 1 ? h('ul', [li]) : li

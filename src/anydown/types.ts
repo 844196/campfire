@@ -1,52 +1,50 @@
 /* eslint-disable indent */
 /* eslint-disable space-infix-ops */
+/* eslint-disable no-use-before-define */
 
-import {
-  Element as HNodeElement,
-  ElementProperties as HNodeElementProperties,
-  TextNode as HNodeText
-} from 'hast'
-import {
-  Code as MNodeCode,
-  Root as MNodeRoot
-} from 'mdast'
+import { Element as HNodeElement, TextNode as HNodeText } from 'hast'
+import { Root as MNodeRoot } from 'mdast'
 import { Options as toHASTOptions } from 'mdast-util-to-hast'
-import { Node as MNode } from 'unist'
-import {
-  CreateElement,
-  VNode,
-  VNodeData
-} from 'vue'
+import { Node as UNode } from 'unist'
+import { CreateElement, VNode } from 'vue'
 
-export type VNodeFactory = CreateElement
+// ノードの再定義
+export type MNode = UNode
 export type HNode = HNodeElement | HNodeText
-export type VHNode = VNode | HNode
-export {
-  MNode,
-  VNode,
-  MNodeRoot,
-  VNodeData,
-  HNodeElementProperties,
-  MNodeCode,
-  HNodeText,
-  HNodeElement
-}
 
-export type InputHandler = (reflect: Reflector) => void
+// UNodeを継承したノードのタイプを取得するヘルパー型
+export type NodeType<T extends UNode> = T['type'] & string
+
+// Markdown文字列をMNodeへ変換する
 export type Parser = (src: string) => MNodeRoot
-export type Compiler = (mnodeRoot: MNodeRoot, h: VNodeFactory, onInput: InputHandler) => VNode
-export type Reflector = (src: string) => string
-export type ChildrenConverter = (children: Array<MNode>) => Array<VNode>
 
-export type CustomHandler<T = MNode> = (
-  node: T,
-  parent: MNode,
-  utils: {
-    h: VNodeFactory,
-    onInput: InputHandler,
-    convertChildren: ChildrenConverter
-  }
-) => VNode | void
+// HNodeタイプに対応したハンドラのマップ
 export type BundledHandlers = Required<toHASTOptions>['handlers']
 
-export type MNodeType<T extends MNode> = T['type'] & string
+// パーサーで変換されたMNodeを受け取りVNodeへ変換する
+export type Compiler = (
+  mnodeRoot: MNodeRoot,
+  h: CreateElement,
+  onInput: InputEventDispatcher
+) => VNode
+
+// 任意のタイプのMNodeをVNodeへ変換する
+// VNodeを返さなかった場合は、デフォルトのハンドラが呼び出される
+export type CustomHandler<T extends MNode> = (
+  node: T,
+  payload: CustomHandlerPayloadContext & CustomHandlerPayloadHelpers
+) => VNode | void
+export type CustomHandlerPayloadContext = {
+  parent: MNode
+}
+export type CustomHandlerPayloadHelpers = {
+  h: CreateElement,
+  onInput: InputEventDispatcher,
+  handleChildren: (children: Array<MNode>) => Array<VNode>
+}
+
+// リフレクターを受け取りinputイベントを発火させる
+export type InputEventDispatcher = (reflect: Reflector) => void
+
+// 変換元となったMarkdown文字列全体を受け取り、変更を反映した文字列を返す
+export type Reflector = (src: string) => string
