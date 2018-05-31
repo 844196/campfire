@@ -1,4 +1,5 @@
 import UUID from '@/utils/uuid'
+import { parseTitle } from '@/utils/markdown'
 
 /**
  * 型付けされた生のメモ
@@ -23,8 +24,7 @@ export default class Memo {
   ) {}
 
   get title (): string {
-    // FIXME
-    return 'Untitled'
+    return parseTitle(this.content, 'Untitled')
   }
 
   deflate (): RawMemo {

@@ -18,5 +18,10 @@ declare module 'mdast' {
       loose: boolean
       checked: boolean | null
     }
+
+    interface Heading extends Parent {
+      type: 'heading'
+      depth: 1 | 2 | 3 | 4 | 5 | 6
+    }
   }
 }
