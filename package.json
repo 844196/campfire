@@ -12,6 +12,7 @@
     "firebase": "^4.3.0",
     "github-markdown-css": "^2.10.0",
     "hastscript": "^3.1.0",
+    "highlight.js": "^9.12.0",
     "is-uuid": "^1.0.2",
     "lodash": "^4.17.10",
     "mdast-util-to-hast": "^3.0.0",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/codemirror": "^0.0.56",
     "@types/firebase": "^3.2.1",
+    "@types/highlight.js": "^9.12.3",
     "@types/lodash": "^4.14.109",
     "@types/uuid": "^3.4.3",
     "@vue/cli-plugin-babel": "^3.0.0-beta.11",

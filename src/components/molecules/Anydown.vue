@@ -7,11 +7,13 @@ import Vue from 'vue'
 import { Installer as RendererInstaller } from '@/anydown'
 import PlantUMLComponent from '@/components/atoms/AnydownPlantUML.vue'
 import TestComponent from '@/components/atoms/AnydownTest.vue'
+import PrettyCodeComponent from '@/components/atoms/AnydownPrettyCode.vue'
 import { ListItem } from 'mdast'
 
 const renderer = new RendererInstaller()
   .addAnydownComponent('uml', PlantUMLComponent)
   .addAnydownComponent('test', TestComponent)
+  .addAnydownComponent(() => true, PrettyCodeComponent)
   .addCustomHandler('listItem', (node: ListItem, { parent, h, onInput, handleChildren }) => {
     if (node.checked === null) {
       return
