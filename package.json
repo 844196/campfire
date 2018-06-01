@@ -34,7 +34,7 @@
     "vuexfire": "^2.3.0"
   },
   "devDependencies": {
-    "@types/codemirror": "^0.0.56",
+    "@types/codemirror": "^0.0.57",
     "@types/firebase": "^3.2.1",
     "@types/highlight.js": "^9.12.3",
     "@types/lodash": "^4.14.109",
