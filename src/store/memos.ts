@@ -3,7 +3,6 @@ import { firebaseAction } from 'vuexfire'
 import { createNamespacedHelpers } from 'vuex'
 import { DefineGetters, DefineMutations, DefineActions } from 'vuex-type-helper'
 import Memo, { RawMemo } from '@/models/memo'
-import UUID from '@/utils/uuid'
 
 const memosRef = firebase.database().ref('memos')
 
@@ -16,7 +15,7 @@ const state: State = {
 
 export interface Getters {
   all: Array<Memo>
-  findOrEmpty: (uuid: UUID, authorUid: string) => Memo
+  findOrEmpty: (uuid: string, authorUid: string) => Memo
 }
 const getters: DefineGetters<Getters, State> = {
   all (state) {
@@ -27,7 +26,7 @@ const getters: DefineGetters<Getters, State> = {
     })
   },
   findOrEmpty (_, getters) {
-    return (uuid, authorUid) => getters.all.find(m => m.uuid.isEqual(uuid)) || Memo.empty(uuid, authorUid)
+    return (uuid, authorUid) => getters.all.find(m => m.uuid === uuid) || Memo.empty(uuid, authorUid)
   }
 }
 
@@ -40,7 +39,7 @@ export interface Actions {
     memo: Memo
   }
   delete: {
-    uuid: UUID
+    uuid: string
   }
 }
 const actions: DefineActions<Actions, State, Mutations, Getters> = {
@@ -51,7 +50,7 @@ const actions: DefineActions<Actions, State, Mutations, Getters> = {
     memosRef.child(memo.uuid.toString()).set(memo.deflateForPersist(new Date()))
   }),
   delete: firebaseAction((_, { uuid }) => {
-    memosRef.child(uuid.toString()).remove()
+    memosRef.child(uuid).remove()
   })
 }
 

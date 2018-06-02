@@ -1,25 +1,17 @@
 import uuidv4 from 'uuid/v4'
 import isUUID from 'is-uuid'
 
-export default class UUID {
-  private constructor (readonly value: string) {}
+export function generate (): string {
+  return uuidv4()
+}
 
-  toString (): string {
-    return this.value
-  }
+export function isValid (uuid: string): boolean {
+  return isUUID.v4(uuid)
+}
 
-  isEqual (other: UUID): boolean {
-    return other.value === this.value
+export function ensureValid (uuid: string): string {
+  if (isValid(uuid)) {
+    return uuid
   }
-
-  static valueOf (raw: string): UUID {
-    if (!isUUID.v4(raw)) {
-      throw new Error('invalid value')
-    }
-    return new this(raw)
-  }
-
-  static generate (): UUID {
-    return this.valueOf(uuidv4())
-  }
+  throw new Error('Invalid uuid value')
 }

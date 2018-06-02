@@ -1,6 +1,6 @@
 import { RouteConfig } from 'vue-router'
 import store from '@/store'
-import UUID from '@/utils/uuid'
+import * as UUID from '@/utils/uuid'
 import LoginView from '@/views/Login.vue'
 import MainView from '@/views/Main.vue'
 import MemosView from '@/views/Memos.vue'
@@ -44,7 +44,7 @@ const routes: RouteConfig[] = [
             name: 'new',
             redirect: () => ({
               name: 'memo',
-              params: { memoUUID: UUID.generate().toString() }
+              params: { memoUUID: UUID.generate() }
             })
           },
           {
@@ -52,7 +52,7 @@ const routes: RouteConfig[] = [
             name: 'memo',
             component: MemoEditorView,
             props: ({ params }) => ({
-              memo: store.getters['memos/findOrEmpty'](UUID.valueOf(params.memoUUID), store.state.auth.user!.uid)
+              memo: store.getters['memos/findOrEmpty'](UUID.ensureValid(params.memoUUID), store.state.auth.user!.uid)
             })
           }
         ]
