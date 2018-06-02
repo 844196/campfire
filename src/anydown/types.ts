@@ -41,7 +41,7 @@ export type CustomHandlerPayloadContext = {
 export type CustomHandlerPayloadHelpers = {
   h: CreateElement,
   onInput: InputEventDispatcher,
-  handleChildren: (children: Array<MNode>) => Array<VNode>
+  handleChildren: (children: Array<VNode | MNode>) => Array<VNode>
 }
 
 // リフレクターを受け取りinputイベントを発火させる

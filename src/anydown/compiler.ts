@@ -43,8 +43,11 @@ function toVNode (h: CreateElement, node: VNode | HNode, children: Array<VNode |
   )
 }
 
-function toVHNode<T extends MNode> (mnode: T, handlers: BundledHandlers) {
-  return toHNode(mnode, { handlers }) as T extends Parent
+function toVHNode<T extends VNode | MNode> (node: T, handlers: BundledHandlers) {
+  if (isVNode(node)) {
+    return node
+  }
+  return toHNode(<MNode>node, { handlers }) as T extends Parent
     ? Parent & { children: Array<VNode | HNode> }
     : VNode | HNode
 }
