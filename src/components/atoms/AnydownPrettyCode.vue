@@ -1,6 +1,8 @@
 <template lang="pug">
-pre(class="pretty-code hljs")
-  code(v-html="highlighted")
+.pretty-code
+  label.filename {{ filename }}
+  pre(class="hljs")
+    code(v-html="highlighted")
 </template>
 
 <script lang="ts">
@@ -14,12 +16,18 @@ export default Vue.extend({
       type: String,
       required: true
     },
-    language: {
+    info: {
       type: String,
       required: true
     }
   },
   computed: {
+    language (): string {
+      return this.info.split(':')[0]
+    },
+    filename (): string {
+      return this.info.split(':').slice(1).join()
+    },
     canHighlight (): boolean {
       return hljs.getLanguage(this.language) !== undefined
     },
@@ -29,6 +37,19 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style lang="stylus" scoped>
+.pretty-code
+  position: relative
+  .filename
+    position: absolute
+    top: .5em
+    right: 1em
+    font-size: .75em
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace
+    color: #ccc
+    z-index: 3
+</style>
 
 <style lang="css">
 /**

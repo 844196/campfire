@@ -34,7 +34,7 @@ export default class Installer {
         },
         props: {
           value: node.value,
-          language: node.lang === null ? '' : node.lang
+          info: node.lang === null ? '' : node.lang
         }
       })
     })
