@@ -11,7 +11,7 @@ import PrettyCodeComponent from '@/components/atoms/AnydownPrettyCode.vue'
 import { ListItem, Paragraph, TextNode } from 'mdast'
 
 const renderer = new RendererInstaller()
-  .addAnydownComponent('uml', PlantUMLComponent)
+  .addAnydownComponent(['plantuml', 'uml'], PlantUMLComponent)
   .addAnydownComponent('test', TestComponent)
   .addAnydownComponent(() => true, PrettyCodeComponent)
   .addCustomHandler('listItem', (node: ListItem, { h, onInput, handleChildren }) => {

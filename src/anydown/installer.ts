@@ -8,15 +8,19 @@ import { reflectToCodeBlock } from './reflector'
 import installRenderer from './renderer'
 import { CustomHandler, MNode, NodeType } from './types'
 
-type NodeMatcher = (node: MNode, parent: MNode) => boolean
+type NodeMatcher = (node: CodeBlock, parent: MNode) => boolean
 
 export default class Installer {
   private customHandlers = new CustomHandlerSet(defaultHandlers)
 
-  addAnydownComponent (lang: string | NodeMatcher, component: Component<any, any, any, any>) {
+  addAnydownComponent (lang: string | Array<string> | NodeMatcher, component: Component<any, any, any, any>) {
     this.customHandlers.add<CodeBlock>('code', (node, { parent, h, onInput }) => {
       if (typeof lang === 'string') {
         if (node.lang !== lang) {
+          return
+        }
+      } else if (lang instanceof Array) {
+        if (node.lang === null || !lang.includes(node.lang)) {
           return
         }
       } else {
