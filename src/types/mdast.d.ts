@@ -27,5 +27,9 @@ declare module 'mdast' {
     interface Paragraph extends Parent {
       type: 'paragraph'
     }
+
+    interface TextNode extends Text {
+      type: 'text'
+    }
   }
 }

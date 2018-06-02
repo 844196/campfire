@@ -8,13 +8,13 @@ import { Installer as RendererInstaller } from '@/anydown'
 import PlantUMLComponent from '@/components/atoms/AnydownPlantUML.vue'
 import TestComponent from '@/components/atoms/AnydownTest.vue'
 import PrettyCodeComponent from '@/components/atoms/AnydownPrettyCode.vue'
-import { ListItem, Paragraph } from 'mdast'
+import { ListItem, Paragraph, TextNode } from 'mdast'
 
 const renderer = new RendererInstaller()
   .addAnydownComponent('uml', PlantUMLComponent)
   .addAnydownComponent('test', TestComponent)
   .addAnydownComponent(() => true, PrettyCodeComponent)
-  .addCustomHandler('listItem', (node: ListItem, { parent, h, onInput, handleChildren }) => {
+  .addCustomHandler('listItem', (node: ListItem, { h, onInput, handleChildren }) => {
     if (node.checked === null) {
       return
     }
@@ -35,19 +35,24 @@ const renderer = new RendererInstaller()
       }
     })
 
-    const oldest = node.children[0]
-    const isP = (n: any): n is Paragraph => n && n.type === 'paragraph'
-    if (node.children.length === 1 && isP(oldest)) {
-      // TextNodeだけにする
-      node.children.splice(0, 1, oldest.children[0])
-    } else {
-      // TODO: 全体をParagraphで囲む
+    const firstChild = node.children[0]
+    let container = [checkbox, ...node.children]
+    const isParagraph = (node: any): node is Paragraph => node && node.type === 'paragraph'
+    if (isParagraph(firstChild)) {
+      const margin = { type: 'text', value: ' ' } as TextNode
+      firstChild.children.unshift(margin)
+
+      if (node.children.length > 1) {
+        container = [
+          h('p', handleChildren([checkbox, ...firstChild.children])),
+          ...node.children.slice(1)
+        ]
+      } else {
+        container = [checkbox, ...firstChild.children]
+      }
     }
 
-    const children = handleChildren(node.children)
-    const li = h('li', { class: 'task-list-item' }, [checkbox, ' ', ...children])
-
-    return parent.position!.start.column > 1 ? h('ul', [li]) : li
+    return h('li', { class: 'task-list-item' }, handleChildren(container))
   })
   .install()
 
