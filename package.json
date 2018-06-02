@@ -72,7 +72,10 @@
       "@vue/standard",
       "@vue/typescript",
       "plugin:vue/recommended"
-    ]
+    ],
+    "rules": {
+      "no-useless-constructor": "off"
+    }
   },
   "postcss": {
     "plugins": {

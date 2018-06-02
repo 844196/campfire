@@ -15,7 +15,6 @@ export interface RawMemo {
  * メモエンティティ
  */
 export default class Memo {
-  // eslint-disable-next-line no-useless-constructor
   private constructor (
     public uuid: UUID,
     public authorUid: string,
