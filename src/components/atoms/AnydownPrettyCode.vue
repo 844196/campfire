@@ -6,6 +6,7 @@ pre(class="pretty-code hljs")
 <script lang="ts">
 import Vue from 'vue'
 import hljs from 'highlight.js'
+import { escape } from 'lodash'
 
 export default Vue.extend({
   props: {
@@ -23,7 +24,7 @@ export default Vue.extend({
       return hljs.getLanguage(this.language) !== undefined
     },
     highlighted (): string {
-      return this.canHighlight ? hljs.highlight(this.language, this.value).value : this.value
+      return this.canHighlight ? hljs.highlight(this.language, this.value).value : escape(this.value)
     }
   }
 })
