@@ -5,7 +5,7 @@ import LoginView from '@/views/Login.vue'
 import MainView from '@/views/Main.vue'
 import MemosView from '@/views/Memos.vue'
 import MemoEditorView from '@/views/MemoEditor.vue'
-import MemoEmptyState from '@/components/atoms/MemoEmptyState.vue'
+import MemoEmptyState from '@/components/MemoEmptyState.vue'
 
 const routes: RouteConfig[] = [
   {

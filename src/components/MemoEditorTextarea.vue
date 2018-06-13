@@ -9,8 +9,9 @@ import { codemirror } from 'vue-codemirror-lite'
 import { Editor, EditorConfiguration } from 'codemirror'
 import 'codemirror/mode/markdown/markdown.js'
 import 'codemirror/lib/codemirror.css'
+import 'codemirror/addon/edit/trailingspace.js'
 
-const options: EditorConfiguration = {
+const options: EditorConfiguration & { showTrailingSpace: boolean } = {
   mode: {
     name: 'text/x-markdown',
     highlightFormatting: true
@@ -24,7 +25,8 @@ const options: EditorConfiguration = {
   extraKeys: {
     Tab: 'indentMore',
     'Shift-Tab': 'indentLess'
-  }
+  },
+  showTrailingSpace: true
 }
 
 export default Vue.extend({
@@ -78,6 +80,7 @@ export default Vue.extend({
       color: #6a737d
     .cm-link
       color: #005cc5
+      text-decoration: none
     .cm-formatting-link.cm-link, .cm-formatting-image.cm-link
       color: unset
       text-decoration: none
@@ -93,4 +96,6 @@ export default Vue.extend({
       color: #005cc5
     .cm-formatting-code + .cm-comment
       color: #005cc5
+    [class*="cm-trailingspace"]
+      border-bottom: 1px solid red
 </style>

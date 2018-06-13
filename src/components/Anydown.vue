@@ -5,9 +5,9 @@ renderer.markdown-body(:value="value", @input="$emit('input', $event)")
 <script lang="ts">
 import Vue from 'vue'
 import { Installer as RendererInstaller } from '@/anydown'
-import PlantUMLComponent from '@/components/atoms/AnydownPlantUML.vue'
-import TestComponent from '@/components/atoms/AnydownTest.vue'
-import PrettyCodeComponent from '@/components/atoms/AnydownPrettyCode.vue'
+import PlantUMLComponent from './AnydownPlantUML.vue'
+import TestComponent from './AnydownTest.vue'
+import PrettyCodeComponent from './AnydownPrettyCode.vue'
 import { ListItem, Paragraph, TextNode } from 'mdast'
 
 const renderer = new RendererInstaller()

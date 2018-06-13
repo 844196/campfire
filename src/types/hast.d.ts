@@ -18,7 +18,7 @@ declare module 'hast' {
       type: 'element'
       tagName: string
       properties: ElementProperties
-      content: Root | null
+      content?: Root
     }
 
     interface Doctype extends Node {

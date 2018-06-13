@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import MemoList from '@/components/atoms/MemoList.vue'
+import MemoList from '@/components/MemoList.vue'
 import { memosHelpers } from '@/store/memos'
 
 export default Vue.extend({

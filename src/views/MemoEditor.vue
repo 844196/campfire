@@ -8,9 +8,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import Anydown from '@/components/molecules/Anydown.vue'
-import MemoEditorTextarea from '@/components/atoms/MemoEditorTextarea.vue'
-import MemoEditorSidebar, { StoreState } from '@/components/atoms/MemoEditorSidebar.vue'
+import Anydown from '@/components/Anydown.vue'
+import MemoEditorTextarea from '@/components/MemoEditorTextarea.vue'
+import MemoEditorSidebar, { StoreState } from '@/components/MemoEditorSidebar.vue'
 import { debounce } from 'lodash'
 import Memo from '@/models/memo'
 import { memosHelpers } from '@/store/memos'
