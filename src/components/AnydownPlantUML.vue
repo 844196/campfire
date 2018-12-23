@@ -20,9 +20,12 @@ export default Vue.extend({
       src: ''
     }
   },
-  computed: {
-    decodedUrl (): string {
-      return `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
+  watch: {
+    // vue-routerを使用している場合、遷移先にもこのコンポーネントがあると再利用される
+    // その際ライフサイクルイベント (created) が発火しないため、古い内容が800ms表示され続ける
+    // これを回避するため、ページ遷移時に強制的に src を更新する
+    '$route' () {
+      this.updateSrc()
     }
   },
   created () {
@@ -34,7 +37,7 @@ export default Vue.extend({
   },
   methods: {
     updateSrc () {
-      this.src = this.decodedUrl
+      this.src = `http://www.plantuml.com/plantuml/svg/${PlantUML.encode(this.value)}`
     }
   }
 })

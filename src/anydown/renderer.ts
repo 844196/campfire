@@ -1,22 +1,27 @@
 import Vue, { VNode } from 'vue'
-import { Compiler, Parser, Reflector } from './types'
+import { parse } from './parser'
+import { Compiler, Mutator } from './types'
 
-export default function install (parse: Parser, compile: Compiler) {
+export function installRenderer (compiler: Compiler) {
   return Vue.extend({
     name: 'AnydownRenderer',
+    model: {
+      prop: 'src',
+      event: 'change'
+    },
     props: {
-      value: {
+      src: {
         type: String,
         required: true
       }
     },
     methods: {
-      onInput (reflect: Reflector) {
-        this.$emit('input', reflect(this.value))
+      commitMutation (mutator: Mutator) {
+        this.$emit('change', mutator(this.src))
       }
     },
     render (h): VNode {
-      return compile(parse(this.value), h, this.onInput)
+      return compiler.compile(parse(this.src), h, this.commitMutation)
     }
   })
 }

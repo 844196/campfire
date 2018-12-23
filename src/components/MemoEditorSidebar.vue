@@ -4,10 +4,15 @@
     v-icon(name="server")
     svg.indicator(width="20", height="20", :class="storeState")
       circle(cx="10", cy="10", r="3.5", fill-rule="evenodd")
+  .item.clickable(@click="toggleMemoListDisplay")
+    v-icon(name="sidebar")
+  .item.clickable(@click="$emit('changeLayout')")
+    v-icon(name="layout")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { memoListHelpers } from '@/store/memo-list'
 
 export enum StoreState {
   DOING = 'doing',
@@ -25,6 +30,9 @@ export default Vue.extend({
       },
       required: true
     }
+  },
+  methods: {
+    ...memoListHelpers.mapActions({ toggleMemoListDisplay: 'toggleDisplay' })
   }
 })
 </script>
@@ -52,4 +60,9 @@ export default Vue.extend({
       fill: #36b37e
     .indicator.failed
       fill: #ff5630
+  .item.clickable
+    &>*
+      cursor: pointer
+    &>*:hover
+      color: #42526e
 </style>

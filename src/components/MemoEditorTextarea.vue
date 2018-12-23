@@ -1,5 +1,6 @@
 <template lang="pug">
-codemirror.memo-editor-textarea(ref="codemirror", :value="value", :options="options", @change="onInput", @click.native="onClick")
+div(@drop="onDrop", style="z-index:100")
+  codemirror.memo-editor-textarea(ref="codemirror", :value="value", :options="options", @change="onInput", @click.native="onClick")
 </template>
 
 <script lang="ts">
@@ -11,6 +12,7 @@ import 'codemirror/mode/markdown/markdown.js'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/edit/trailingspace.js'
 
+// eslint-disable-next-line space-infix-ops
 const options: EditorConfiguration & { showTrailingSpace: boolean } = {
   mode: {
     name: 'text/x-markdown',
@@ -61,6 +63,9 @@ export default Vue.extend({
 
       doc.setCursor({ line, ch })
       cm.focus()
+    },
+    onDrop (event: DragEvent) {
+      console.log(event.dataTransfer)
     }
   }
 })

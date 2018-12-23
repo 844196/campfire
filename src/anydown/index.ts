@@ -1,13 +1,17 @@
-import Installer from './installer'
+import { CompilerBuilder } from './compiler'
+import { customCodeblock } from './custom-codeblock'
+import { installRenderer } from './renderer'
+import { Compiler, Middleware, MutationCommitter, Mutator, TupledMiddleware } from './types'
 
-export { Installer }
+export default installRenderer(new CompilerBuilder().build())
 
 export {
-  CustomHandler,
-  CustomHandlerPayload,
-  InputEventDispatcher,
-  Reflector
-} from './types'
-
-// simple renderer
-export default new Installer().install()
+  Compiler,
+  CompilerBuilder,
+  Middleware,
+  MutationCommitter,
+  Mutator,
+  TupledMiddleware,
+  customCodeblock,
+  installRenderer
+}

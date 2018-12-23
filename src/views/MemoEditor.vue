@@ -1,26 +1,51 @@
 <template lang="pug">
 .memo-editor
-  .column-wrapper
-    memo-editor-textarea.column.textarea(v-model="cachedContent")
-    anydown.column.previewer(:uuid="memo.uuid", v-model="cachedContent")
-  memo-editor-sidebar(:storeState="storeState")
+  .column-wrapper(:style="{ 'grid-template-columns': currentLayout.columns }")
+    .column.textarea(:class="{ only: !currentLayout.showPreviewer }", v-show="currentLayout.showTextarea")
+      memo-editor-textarea.padding-1em(v-model="cachedContent")
+    .column.previewer(:class="{ only: !currentLayout.showTextarea }", v-show="currentLayout.showPreviewer")
+      memo-editor-previewer.padding-1em(v-model="cachedContent")
+  memo-editor-sidebar(:storeState="storeState", @changeLayout="changeLayout")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Anydown from '@/components/Anydown.vue'
-import MemoEditorTextarea from '@/components/MemoEditorTextarea.vue'
 import MemoEditorSidebar, { StoreState } from '@/components/MemoEditorSidebar.vue'
+import MemoEditorTextarea from '@/components/MemoEditorTextarea.vue'
+import MemoEditorPreviewer from '@/components/MemoEditorPreviewer.vue'
 import { debounce } from 'lodash'
 import Memo from '@/models/memo'
 import { memosHelpers } from '@/store/memos'
 
+// eslint-disable-next-line wrap-iife
+const layouts = function * () {
+  while (true) {
+    yield * [
+      {
+        showTextarea: true,
+        showPreviewer: true,
+        columns: '50% 50%'
+      },
+      {
+        showTextarea: true,
+        showPreviewer: false,
+        columns: '100%'
+      },
+      {
+        showTextarea: false,
+        showPreviewer: true,
+        columns: '100%'
+      }
+    ]
+  }
+}()
+
 export default Vue.extend({
   name: 'MemoEditor',
   components: {
-    MemoEditorTextarea,
     MemoEditorSidebar,
-    Anydown
+    MemoEditorTextarea,
+    MemoEditorPreviewer
   },
   props: {
     memo: {
@@ -31,7 +56,8 @@ export default Vue.extend({
   data () {
     return {
       cached: this.memo,
-      storeState: StoreState.COMPLETED
+      storeState: StoreState.COMPLETED,
+      currentLayout: layouts.next().value
     }
   },
   computed: {
@@ -57,6 +83,9 @@ export default Vue.extend({
     ...memosHelpers.mapActions({
       '_createOrUpdate': 'createOrUpdate'
     }),
+    changeLayout () {
+      this.currentLayout = layouts.next().value
+    },
     createOrUpdate: debounce(async function (this: any) {
       this._createOrUpdate({ memo: this.memo })
         .then(() => {
@@ -76,24 +105,33 @@ export default Vue.extend({
 .memo-editor
   display: flex
 
+.padding-1em
+  padding: 1em
+
 .column-wrapper
   display: grid
   grid-template-rows: 100%
-  grid-template-columns: 50% 50%
   width: 100%
   height: 100%
   .column
-    padding: 1em
-    height: 100%
+    &>*
+      height: 100%
+    &>*:after
+      display: block
+      content: ''
+      height: 1em
 
   .textarea
     font-size: 13px
     line-height: 1.5
     overflow-y: scroll
+    &::-webkit-scrollbar-track
+      background-color: #f2f2f2
 
   .previewer
-    font-size: 14px
     overflow-y: auto
+    &>*
+      font-size: 14px
 
   .textarea, .previewer
     &::-webkit-scrollbar
@@ -104,7 +142,14 @@ export default Vue.extend({
       &:hover
         background-color: #727272
 
-  .textarea
+  .column.textarea.only
+    &>*
+      margin: 0 auto
+      max-width: 992px
     &::-webkit-scrollbar-track
-      background-color: #f2f2f2
+      background-color: unset
+  .column.previewer.only
+    &>*
+      margin: 0 auto
+      max-width: 992px
 </style>

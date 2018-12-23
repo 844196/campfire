@@ -1,5 +1,5 @@
 declare module 'mdast' {
-  import { Parent, Text } from 'unist'
+  import { Parent, Text, Node } from 'unist'
 
   export = MDAST
 
@@ -30,6 +30,39 @@ declare module 'mdast' {
 
     interface TextNode extends Text {
       type: 'text'
+    }
+
+    interface Link extends Parent {
+      type: 'link'
+      title: string | null
+      url: string
+    }
+
+    interface Image extends Node {
+      type: 'image'
+      title: string | null
+      alt: string | null
+      url: string
+    }
+
+    interface LinkReference extends Parent {
+      type: 'linkReference'
+      identifier: string
+      referenceType: 'shortcut' | 'collapsed' | 'full'
+    }
+
+    interface ImageReference extends Node {
+      type: 'imageReference'
+      identifier: string
+      referenceType: 'shortcut' | 'collapsed' | 'full'
+      alt: string | null
+    }
+
+    interface Definition extends Node {
+      type: 'definition'
+      identifier: string
+      title: string | null
+      url: string
     }
   }
 }

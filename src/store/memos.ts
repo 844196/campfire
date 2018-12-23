@@ -47,7 +47,8 @@ const actions: DefineActions<Actions, State, Mutations, Getters> = {
     bindFirebaseRef('raws', memosRef)
   }),
   createOrUpdate: firebaseAction((_, { memo }) => {
-    memosRef.child(memo.uuid.toString()).set(memo.deflateForPersist(new Date()))
+    memosRef.child(memo.uuid.toString()).set(memo.deflateForPersist(memo.updatedAt))
+    // memosRef.child(memo.uuid.toString()).set(memo.deflateForPersist(new Date()))
   }),
   delete: firebaseAction((_, { uuid }) => {
     memosRef.child(uuid).remove()

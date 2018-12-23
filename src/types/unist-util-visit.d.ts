@@ -1,5 +1,5 @@
 declare module 'unist-util-visit' {
-  import { Node } from 'unist'
+  import { Node, Parent } from 'unist'
 
   export type CONTINUE = true | void
   export type SKIP = 'skip'
@@ -8,7 +8,7 @@ declare module 'unist-util-visit' {
   type Visitor<T> = (
     node: T,
     index: number | null,
-    parent: Node | null
+    parent: Parent | null
   ) => CONTINUE | SKIP | EXIT | number
 
   export default function visit<T extends Node> (

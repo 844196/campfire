@@ -1,5 +1,7 @@
-import { Position } from 'unist'
-import { Reflector } from './types'
+import { Code as Codeblock } from 'mdast'
+import { Parent, Position } from 'unist'
+import { Component } from 'vue'
+import { Mutator, TupledMiddleware } from './types'
 
 function parseBlock (block: Array<string>) {
   const openFence = block[0]
@@ -8,14 +10,13 @@ function parseBlock (block: Array<string>) {
   const openFenceIdx = openFence.search(/[~`]/)
   const fence = openFence.substr(openFenceIdx, 3)
   const indent = openFence.slice(0, openFenceIdx)
-
   const isFenceClosed = closeFence.trim() === fence
 
   return { openFence, closeFence, fence, indent, isFenceClosed }
 }
 
-export function reflectToCodeBlock (value: string, position: Position): Reflector {
-  return function (src: string) {
+function reflectToCodeBlock (value: string, position: Position): Mutator {
+  return src => {
     // FIXME: Unist.PositionをMarkdownItのmapに無理やり合わせている
     const start = position.start.line - 1
     const end = position.end.line
@@ -48,4 +49,36 @@ export function reflectToCodeBlock (value: string, position: Position): Reflecto
 
     return splited.join('\n')
   }
+}
+
+export type NodeMatcher = (node: Codeblock, parent?: Parent) => boolean
+
+export function customCodeblock (
+  lang: string | Array<string> | NodeMatcher,
+  component: Component<any, any, any, any>
+): TupledMiddleware<Codeblock> {
+  return ['code', ({ h, commit }, node, parent) => {
+    if (typeof lang === 'string') {
+      if (node.lang !== lang) {
+        return
+      }
+    } else if (lang instanceof Array) {
+      if (node.lang === null || !lang.includes(node.lang)) {
+        return
+      }
+    } else {
+      if (!lang(node, parent)) {
+        return
+      }
+    }
+    return h(component, {
+      on: {
+        input: (value: string) => commit(reflectToCodeBlock(value, node.position!))
+      },
+      props: {
+        value: node.value,
+        info: node.lang === null ? '' : node.lang
+      }
+    })
+  }]
 }
